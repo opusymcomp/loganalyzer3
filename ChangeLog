@@ -1,0 +1,339 @@
+2018-05-16  An Ohori <sya01053@edu.osakafu-u.ac.jp>
+
+	* lib/option.py:
+	- 不要なオプションの消去
+
+	* main.py:
+	- 開発途中の部分にコメントを追加
+
+2018-02-08  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/calcurate.py:
+	* lib/la_class.py:
+	* lib/lib_log_analyzer.py:
+	* main.py:
+	* calculation/kick_sequence.py:
+	- ペナルティエリア侵入回数を追加
+
+	* calculation/penalty_area.py:
+	- 不要なファイルを削除
+
+2018-01-05  Jiarun Zhong  <mbb04011@edu.osakafu-u.ac.jp>
+
+	* calculation/dribble_count.py:
+	* extraction/get_dash.py:
+	- ドリブルの計算ファイルを追加
+
+	* calculation/calculate.py:
+	* extraction/get_dash.py:
+	* lib/la_class.py:
+	* main.py:
+	- ドリブルを出力対象に追加
+
+2017-12-29  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* loop.sh:
+	* extraction/rcl_reader.py:
+	* loop.py:
+	* main.py:
+	* lib/option.py:
+	- ディレクトリループ用のシェルファイルを追加
+	- loop.pyを削除
+
+2017-12-01  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/possession.py:
+	* calculation/win_lose.py:
+	- 不要になったため削除
+
+	* calculation/calculate.py:
+	* calculation/pass_check.py:
+	* calculation/shoot.py:
+	* calculation/through_pass.py:
+	* extraction/extract.py:
+	* extraction/get_kick.py:
+	* extraction/get_tackle.py:
+	* extraction/referee.py:
+	* lib/la_class.py:
+	* lib/state.py:
+	* main.py:
+	- loganalyzer3用にファイルを整理
+	- 細かいバグを修正
+
+2017-11-27  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/calculate.py:
+	* calculation/through_pass.py:
+	* lib/la_class.py:
+	* main.py:
+
+	- through pass回数の実装
+	- バグの修正
+
+2017-11-27  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/offside_line.py:
+	* calculation/pass_check.py:
+	* calculation/shoot.py:
+	* extraction/extract.py:
+	* extraction/filename_split.py:
+	* extraction/get_coordinate.py:
+	* extraction/get_kick.py:
+	* extraction/get_tackle.py:
+	* extraction/hetero.py:
+	* extraction/referee.py:
+	* extraction/state.py:
+	* lib/lib_log_analyzer.py:
+	* lib/option.py:
+	* main.py:
+	- loganalyzer2を高速化
+	- オプションの構造を変更
+
+	* calculation/calculate.py:
+	* extraction/rcg_reader.py:
+	* extraction/rcl_reader.py:
+	* lib/la_class.py:
+	- classを用いた構造に変更
+
+2017-10-24  An Ohori <sya01138@edu.osakafu-u.ac.jp>
+
+	* ChangeLog:
+	* main.py:
+	* loop.py:
+
+	- バグの修正
+
+2017-10-24  An Ohori <sya01138@edu.osakafu-u.ac.jp>
+
+	* ChangeLog:
+
+	- 不要なファイルを削除して、それまでの変更を再び追加
+
+2017-10-24  An Ohori <sya01138@edu.osakafu-u.ac.jp>
+
+	* ChangeLog:
+	* main.py:
+	* loop.py:
+	* calculation/distribution3dplot.py:
+
+	- バグの修正
+
+2017-10-24  An Ohori <sya01138@edu.osakafu-u.ac.jp>
+
+	* ChangeLog:
+	* main.py:
+	* loop.py:
+
+	- すべての項目を前後半それぞれ表示するように変更
+	- 場所ごとのパス成功率を表示するように変更
+
+	* calculation/distribution3dplot.py:
+	* extraction/kick_txt.py:
+
+	- キック分布を作成するファイルを追加
+
+	* extraction/referee.py:
+	- 前後半のイエローカード数を計算する関数を追加
+
+2017-08-31  An Ohori <sya01138@edu.osakafu-u.ac.jp>
+
+	* ChangeLog:
+	* main.py:
+
+	- ペナルティーエリアに入った回数と前後半の得点を表示するように変更
+
+	* calculation/first_second.py:
+	- 前後半の項目を計算するファイルを追加
+
+2016-12-16  Takuya FUKUSHIMA  <takufk0267@gmail.com>
+
+	* ChangeLog:
+	* possession.py:
+
+	- ボール支配率のバグを修正
+
+
+2016-12-16  Takuya FUKUSHIMA  <takufk0267@gmail.com>
+
+	* ChangeLog:
+	* get_kick.py:
+
+	- ゲーム終了後の行動を考慮しないように修正
+
+
+2016-12-15  Takuya Fukushima  <takufk0267@gmail.com>
+
+	* ChangeLog:
+	* HowToUse:
+	* extraction/get_tackle.py:
+	* lib/option.py:
+	* loop.py:
+
+	- tackle のバグを修正
+	- -gオプションの修正
+
+
+2016-12-12  Sho Tanaka  <fudaivolley@gmail.com>
+
+	* ChangeLog:
+	* HowToUse:
+
+	* calculation/nearest_player.py:
+	* calculation/penalty_area.py:
+
+	- ボールに一番近いプレイヤを抽出するプログラムの追加
+	- penalty_area.pyを元の状態に修復
+
+	* lib/lib_log_analyzer.py
+	- ファイルがloganalyzerのディレクトリ下になくとも対応可能なように変更
+
+	* main.py
+	- ファイルがloganalyzerのディレクトリ下になくとも対応可能なよう
+	に変更
+
+	* extraction/filename_split.py
+	- ファイルがloganalyzerのディレクトリ下になくとも対応可能なよう
+	に変更
+
+
+2016-11-11  Takuya Fukushima  <takufk0267@gmail.com>
+
+	* ChangeLog:
+
+	* calculation/shoot.py:
+	* extraction/extract.py:
+	* lib/option.py:
+
+	- 一部のオプションが無効になっていたため修正
+
+
+2016-11-11  Takuya Fukushima  <takufk0267@gmail.com>
+
+	* ChangeLog:
+	* HowToUse:
+
+	* *.pyc:
+	- バイナリファイルの削除
+
+	* extraction/extract.py:
+	- ファイルオープン用のモジュールを追加
+
+	* calculation/pass_check.py:
+	* calculation/pass_probability.py:
+	* calculation/penalty_area.py:
+	* calculation/through_pass.py:
+	* extraction/get_coordinate.py:
+	* extraction/get_kick.py:
+	* extraction/get_tackle.py:
+	* extraction/hetero.py:
+	* extraction/referee.py:
+	* extraction/state.py:
+	* loop.py:
+	* main.py:
+	- 繰り返しファイルオープンしないように修正
+	- tackle と kick の16進数部分を削除
+
+
+2016-10-31  Sho Tanaka  <fudaivolley@gmail.com>
+
+	* ChangeLog:
+	* HowToUse:
+
+	* calculation/through_pass.py:
+	* calculation/pass_probability.py:
+	* calculation/penalty_area.py:
+
+	- スルーパスの回数を調べるファイルを追加
+	- パス成功率を調べるファイルを追加
+	- ペナルティエリア侵入回数を調べるファイルを追加
+	- 上記でのタックルの判定を変更
+
+2016-10-28  Takuya Fukushima  <takufk0267@gmail.com>
+
+	* ChangeLog:
+	* HowToUse:
+
+	* extraction/get_kick.py:
+	* extraction/get_kick.pyc:
+	* lib/option.py:
+	* lib/option.pyc:
+	* main.py:
+
+	* calculation/offside_line.py:
+	* calculation/offside_line.pyc:
+	* calculation/through_pass.py:
+	* extraction/state.py:
+	* extraction/state.pyc:
+	* loop.py:
+	* loop.pyc:
+
+	- ディレクトリ内のファイルをループするように変更
+	- スルーパスの回数を調べるためにファイルを追加（未完成）
+
+2016-10-20  Takuya Fukushima  <takufk0267@gmail.com>
+
+	* ChangeLog:
+	* HowToUse:
+
+	* extraction/referee.py:
+	* extraction/referee.pyc:
+	* lib/option.py:
+	* lib/option.pyc:
+	* main.py:
+
+	- cycle,play_mode,位置情報を抽出するようにオプションを追加
+
+2016-09-03  Takuya Fukushima  <takufk0267@gmail.com>
+
+	* ChangeLog:
+
+	* calculation/possession.py:
+	* calculation/possession.pyc:
+	* extraction/get_tackle.py:
+	* extraction/get_tackle.pyc:
+	* lib/lib_log_analyzer.py:
+	* lib/lib_log_analyzer.pyc:
+
+	- ボール支配率計算時のバグを修正
+
+2016-09-02  Takuya Fukushima  <takufk0267@gmail.com>
+
+	* calculation/pass_check.py:
+	* calculation/pass_check.pyc:
+	* calculation/possession.py:
+	* calculation/possession.pyc:
+	* extraction/get_coordinate.py:
+	* extraction/get_coordinate.pyc:
+	* lib/lib_log_analyzer.py:
+	* lib/lib_log_analyzer.pyc:
+	* main.py:
+
+	* ChangeLog:
+
+	- 同時キックが行われた場合にニュートラルにするよう変更
+
+2016-08-24  Takuya Fukushima  <takufk0267@gmail.com>
+
+	* main.py:
+
+	* calculation/__init__.py:
+	* calculation/__init__.pyc:
+	* calculation/pass_check.py:
+	* calculation/posession.py:
+	* calculation/shoot.py:
+	* calculation/win_lose.py:
+	* extraction/__init__.py:
+	* extraction/filename_split.py:
+	* extraction/get_coordinate.py:
+	* extraction/get_kick.py:
+	* extraction/get_tackle.py:
+	* extraction/hetero.py:
+	* extraction/referee.py:
+	* lib/__init__.py
+	* lib/lib_log_analyzer.py:
+	* lib/option.py:
+
+	* ChangeLog:
+	* HowToUse:
+
+	- logの集計をcsv形式で出力するように設定
