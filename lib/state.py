@@ -14,7 +14,19 @@ def isGoalie( cycle, unum, side, wm ):
         else:
             return False
 
+def isDead( cycle, unum, side, wm ):
 
+    if ( side == 'l' ):
+        if ( wm[cycle].l.player[unum].state == '0' ):
+            return True
+        else:
+            return False
+
+    elif ( side == 'r' ):
+        if ( wm[cycle].r.player[unum].state == '0' ):
+            return True
+        else:
+            return False
 
 
 def checkTackle( state ):

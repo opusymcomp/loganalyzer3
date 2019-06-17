@@ -7,6 +7,7 @@ TMP_FILENAME="rcglist.txt"
 
 startcycle=0
 endcycle=6000
+opt=""
 
 usage()
 {
@@ -38,11 +39,11 @@ do
 			;;
 
 		-l)
-			side="l"
+			opt="${opt} -s l"
 			;;
 
 		-r)
-			side="r"
+			opt="${opt} -s r"
 			;;
 
 		--side)
@@ -50,7 +51,7 @@ do
 				usage
 				exit 1
 			fi
-			side="${3}"
+			opt="${opt} -s ${3}"
 			shift 1
 			;;
 
@@ -59,13 +60,12 @@ do
 				usage
 				exit 1
 			fi
-			team="true"
-			teamname="${3}"
+			opt="${opt} -t ${3}"
 			shift 1
 			;;
 
 		--each-cycle)
-			eachcycle="true"
+			opt="${opt} --each-cycle"
 			;;
 
 		--start-cycle)
@@ -73,7 +73,7 @@ do
 				usage
 				exit 1
 			fi
-			startcycle=$3
+			opt="${opt} --start-cycle ${3}"
 			shift 1
 			;;
 
@@ -82,7 +82,7 @@ do
 				usage
 				exit 1
 			fi
-			endcycle=$3
+			opt="${opt} --end-cycle ${3}"
 			shift 1
 			;;
 
@@ -97,9 +97,9 @@ count=0
 cat ${TMP_FILENAME} | while read log; do
 	echo ${log}
 	if [ $count -eq 0 ]; then
-		python ${DIR}/main.py ${log} -s ${side} --start-cycle ${startcycle} --end-cycle ${endcycle}
+		python ${DIR}/main.py ${log} ${opt}
 	else
-		python ${DIR}/main.py ${log} -s ${side} --without-index --start-cycle ${startcycle} --end-cycle ${endcycle}
+		python ${DIR}/main.py ${log} ${opt} "--without-index"
 	fi
 	count=$(($count+1))
 done

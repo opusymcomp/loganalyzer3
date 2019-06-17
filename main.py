@@ -17,18 +17,16 @@ from calculation import dribble_count as dc
 if __name__ == "__main__":
 
     # ------ options ------ #
-
     args = option.parser()
 
     if ( args.r ):
         print ( "please use loop.sh" )
         sys.exit()
 
-    print ( "loganalyzer3" )
+    #print ( "loganalyzer3" )
 
 
     # ------ target team side ------ #
-
     team = lib.selectTargetTeam( args )
 
     if ( team == "unknown" ):
@@ -59,8 +57,6 @@ if __name__ == "__main__":
     # ------ calculation ------ #
 
     calc.analyzeLog( args, wm, sp, feature, team )
-
-    # ------ They are under development. ------ #
 
     #pass_probability = pb.passProbability( ball, kick, situation, tackle, player_state_l, player_state_r, team )
 

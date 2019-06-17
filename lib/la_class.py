@@ -53,13 +53,23 @@ class Feature:
                         "opp_point",
                         "our_dribble",
                         "opp_dribble",
-                        "our_penalty_area" ]
+                        "our_penalty_area",
+                        "opp_penalty_area",
+                        "our_disconnected_player",
+                        "opp_disconnected_player"]
 
 
-        # for calculate
+        # for calculate kick_sequence
         self.target_team = "none"
+        self.kick_cycle = []
         self.kick_path_x = []
         self.kick_path_y = []
+        self.all_kick_path_x = []
+        self.all_kick_path_y = []
+        self.color4plt_ks = []
+        self.opponent_from_ball = [] # sorted from ball
+        self.kicker = []
+        self.receiver = []
         self.kick_sequence = []
 
         # for output
@@ -93,7 +103,9 @@ class Feature:
         #self.our_dribble_dist = 0
         #self.opp_dribble_dist = 0
         self.our_penalty_area = 0
-        #self.opp_penalty_area = 0
+        self.opp_penalty_area = -1
+        self.our_disconnected_player = 0
+        self.opp_disconnected_player = 0
 
 
     def outputIndexForIR( self, start, end ):
@@ -105,7 +117,7 @@ class Feature:
         csvWriter.writerow( self.index )
         f.close()
 
-    def outputIndexForR(self, filename, side):
+    def outputIndexForR( self, filename, side ):
 
         our_team = lib.getTeamName( filename, side )
         fname = our_team + ".csv"
@@ -115,7 +127,7 @@ class Feature:
         csvWriter.writerow( self.index )
         f.close()
 
-    def outputIntegrateResult(self, start, end):
+    def outputIntegrateResult( self, start, end ):
 
         fname = str(start) + "-" + str(end) + ".csv"
         f = open( fname, 'a' )
@@ -166,13 +178,16 @@ class Feature:
                    self.opp_point,
                    self.our_dribble,
                    self.opp_dribble,
-                   self.our_penalty_area ]
+                   self.our_penalty_area,
+                   self.opp_penalty_area,
+                   self.our_disconnected_player,
+                   self.opp_disconnected_player]
 
         csvWriter.writerow( result )
         f.close()
 
 
-    def outputResult(self, filename, side):
+    def outputResult( self, filename, side ):
 
         our_team = lib.getTeamName( filename, side )
         fname = our_team + ".csv"
@@ -224,11 +239,13 @@ class Feature:
                    self.opp_point,
                    self.our_dribble,
                    self.opp_dribble,
-                   self.our_penalty_area ]
+                   self.our_penalty_area,
+                   self.opp_penalty_area,
+                   self.our_disconnected_player,
+                   self.opp_disconnected_player ]
 
         csvWriter.writerow( result )
         f.close()
-
 
 
 class Team:
@@ -303,7 +320,6 @@ class HeteroParam:
 
 
 class WorldModel:
-
     def __init__(self, team_l, team_r):
         self.ball = Ball()
         self.l = Team( team_l )
