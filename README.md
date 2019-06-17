@@ -44,7 +44,7 @@ Log analysis tool for RoboCup Soccer Simulation 2D
 ## How to Use
 
 ### Add path
-if you add export PATH="/path/to/loganalyzer3:$PATH"
+if you add export `PATH="/path/to/loganalyzer3:$PATH"`
 you can use loganalyzer3 anywhere
 
 ### Options
@@ -58,9 +58,9 @@ analyze only `filename`
 
 ### Example
 Examples of Execution
-- loganalyzer3 /path/to/dir -l
-- loganalyzer3 /path/to/file --side l --debug
-- loganalyzer3 /path/to/dir --team 'HELIOS_base' --each-cycle
+- `loganalyzer3 /path/to/dir -l`
+- `loganalyzer3 /path/to/file --side l --debug`
+- `loganalyzer3 /path/to/dir --team HELIOS_base --each-cycle`
 
 ### Note
 - Data are outputted in csv format
