@@ -2,6 +2,7 @@
 Log analysis tool for RoboCup Soccer Simulation 2D
 
 ## Data obtained
+### output in csv format
 - Date
 - Our team name
 - Opp team name
