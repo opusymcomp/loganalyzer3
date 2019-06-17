@@ -59,6 +59,6 @@ analyze only `filename`
 
 ### Example
 Examples of Execution
-loganalyzer3 /path/to/dir -l
-loganalyzer3 /path/to/file --side l --debug
-loganalyzer3 /path/to/dir --team 'HELIOS_base' --each-cycle
+-- loganalyzer3 /path/to/dir -l
+-- loganalyzer3 /path/to/file --side l --debug
+-- loganalyzer3 /path/to/dir --team 'HELIOS_base' --each-cycle
