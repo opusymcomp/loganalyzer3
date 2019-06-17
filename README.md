@@ -2,7 +2,6 @@
 Log analysis tool for RoboCup Soccer Simulation 2D
 
 ## Data obtained
-output in csv format
 - Date
 - Our team name
 - Opp team name
@@ -62,3 +61,8 @@ Examples of Execution
 - loganalyzer3 /path/to/dir -l
 - loganalyzer3 /path/to/file --side l --debug
 - loganalyzer3 /path/to/dir --team 'HELIOS_base' --each-cycle
+
+### Note
+- Data are outputted in csv format
+- File name is determined by the target teams (e.g. HELIOS_base.csv)
+- Save directory is same as the directory at which you execute `loganalyzer3` 
