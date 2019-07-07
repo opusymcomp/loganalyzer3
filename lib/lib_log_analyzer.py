@@ -4,10 +4,21 @@ import math
 
 # index c
 
-def calcRadian( x1, x2, y1, y2 ):
+def calcDist( pos1, pos2 ):
+
+    return math.sqrt( math.pow( ( pos1.x - pos2.x ), 2 ) + math.pow( ( pos1.y - pos2.y ), 2 ) )
+
+def calcDistC( x1, y1, x2, y2 ):
+
+    return math.sqrt( math.pow( ( x1 - x2 ), 2 ) + math.pow( ( y1 -  y2 ), 2 ) )
+
+def calcRadian( pos1, pos2 ):
+
+    return math.atan2( pos2.y - pos1.y, pos2.x - pos1.x )
+
+def calcRadianC( x1, y1, x2, y2 ):
 
     return math.atan2( y2 - y1, x2 - x1 )
-
 
 def changeRadianToDegree( radian ):
 
@@ -95,3 +106,8 @@ def selectTargetTeam( args ):
 
     else:
         return "unknown"
+
+
+def sortPlayerUnumFromPos( player_list, target_pos ):
+
+    return sorted( player_list, key=lambda player: calcDist( player.pos, target_pos ) )

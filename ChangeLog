@@ -1,10 +1,82 @@
-2018-05-16  An Ohori <sya01053@edu.osakafu-u.ac.jp>
+2019-04-28  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
 
-	* lib/option.py:
-	- 不要なオプションの消去
+	* calculation/calculate.py:
+	* calculation/kick_distribution.py:
+	- リモートで実行できる形で実装を変更
 
-	* main.py:
-	- 開発途中の部分にコメントを追加
+	* lib/la_class.py:
+	* lib/state.py:
+	* calculation/calculate.py:
+	- [WIP]敵のペナルティエリア侵入回数項目を追加
+	- プレイヤのDisconnectedを出力項目に追加
+
+2019-04-27  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+	* calculation/kick_distribution.py:
+	* calculation/kick_sequence.py:
+	- リモート用に，matplotlibのインポート箇所を変更
+
+2019-04-27  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/calculate.py:
+	* calculation/kick_distribution.py:
+	* calculation/kick_sequence.py:
+	* lib/lib_log_analyzer.py:
+	- リモートホストでの実行に対応（デバッグモードは使用不可）
+
+2019-02-08  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/calculate.py:
+	* calculation/kick_distribution.py:
+	* calculation/kick_sequence.py:
+	- 図のフォント埋め込みを追加
+
+2018-07-18  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/calcurate.py:
+	* calculation/kick_distribution.py:
+	* lib/lib_log_analyzer.py:
+	- kick distributionの出力に対応
+
+2018-07-18  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/kick_sequence.py:
+	- ソートした敵プレイヤを全て出力するように変更
+
+	* loop.sh
+	- ループ時にインデックスが再度表示されるバグを修正
+
+2018-07-18  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* loop.sh:
+	- オプションを設定できないバグを修正
+
+2018-07-17  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/calculate.py:
+	- ボール支配率の計算をfloat型にキャスト
+
+2018-07-17  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* loop.sh:
+	- each-cycleのオプションをloopで用いることができるように変更
+
+2018-07-16  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/kick_sequence.py:
+	* lib/la_class.py:
+	- 最近傍の敵を出力するようにoutputKickSequence()を変更．
+
+2018-07-16  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* lib/lib_log_analyzer.py:
+	- プレイヤリストをソートする関数を追加
+
+2018-07-13  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
+
+	* calculation/pass_check.py:
+	* lib/lib_log_analyzer.py:
+	- 座標の直接入力ではなくクラスを渡すように変更
 
 2018-02-08  Takuya Fukushima  <takuya.fukushima@edu.osakafu-u.ac.jp>
 

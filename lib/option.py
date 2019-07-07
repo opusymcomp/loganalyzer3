@@ -13,6 +13,10 @@ def parser():
     parser.add_argument( "-t", "--team",\
                          default=None, \
                          help="select target team name")
+    parser.add_argument( "-g", "--game", \
+                         action="store_true", \
+                         default=False, \
+                         help="output csv file about the game(cycle, playmode, coordinate)")
     parser.add_argument( "-r", \
                          action="store_true", \
                          default=False, \

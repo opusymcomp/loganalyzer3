@@ -31,25 +31,27 @@ def isKick( wm, cycle ):
         if ( ( "(kick" in wm[cycle].l.player[unum].action \
                or "(tackle" in wm[cycle].l.player[unum].action ) \
              and ( checkKick( wm[cycle+1], unum, "l" ) \
-                   and gt.checkTackle( wm[cycle+1].l.player[unum].state ) )
-             and not wm[cycle].referee.said ):
-
-            num_kick += 1
-            wm[ cycle + 1 ].last_kicker_unum = unum
-            wm[ cycle + 1 ].last_kicked_cycle = cycle + 1
-            kick_side_l = True
+                   and gt.checkTackle( wm[cycle+1].l.player[unum].state ) ) ):
+            if ( not wm[cycle].referee.said ):
+                num_kick += 1
+                wm[ cycle + 1 ].last_kicker_unum = unum
+                wm[ cycle + 1 ].last_kicked_cycle = cycle + 1
+                kick_side_l = True
+            else:
+                num_kick += 1
 
 
         if ( ( "(kick" in wm[cycle].r.player[unum].action \
                or "(tackle" in wm[cycle].r.player[unum].action ) \
              and ( checkKick( wm[cycle+1], unum, "r" ) \
-                   and gt.checkTackle( wm[cycle+1].r.player[unum].state ) )
-             and not wm[cycle].referee.said ):
-
-            num_kick += 1
-            wm[ cycle + 1 ].last_kicker_unum = unum
-            wm[ cycle + 1 ].last_kicked_cycle = cycle + 1
-            kick_side_r = True
+                   and gt.checkTackle( wm[cycle+1].r.player[unum].state ) ) ):
+            if ( not wm[cycle].referee.said ):
+                num_kick += 1
+                wm[ cycle + 1 ].last_kicker_unum = unum
+                wm[ cycle + 1 ].last_kicked_cycle = cycle + 1
+                kick_side_r = True
+            else:
+                num_kick += 1
 
 
     if ( kick_side_l and kick_side_r ):

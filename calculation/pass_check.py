@@ -135,10 +135,8 @@ def getPassRoute( wm, cycle ):
 
     # check pass route. return -> left, right, front, back
     last_kicked_cycle = wm[cycle].last_kicked_cycle
-    radian = lib.calcRadian( wm[ last_kicked_cycle ].ball.pos.x, \
-                             wm[ cycle ].ball.pos.x, \
-                             wm[ last_kicked_cycle ].ball.pos.y, \
-                             wm[ cycle ].ball.pos.y )
+    radian = lib.calcRadian( wm[ last_kicked_cycle ].ball.pos, \
+                             wm[ cycle ].ball.pos )
     degree = lib.changeRadianToDegree( radian )
 
     if( wm[cycle+1].dominate_side == "l" ):
