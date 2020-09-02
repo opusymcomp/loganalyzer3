@@ -9,7 +9,9 @@ Log analysis tool for RoboCup Soccer Simulation 2D
 - Opp team name
 - Our final team point
 - Opp final team point
-- Final result (win = 1, lose or draw 0)
+- Our penalty shootout point
+- Opp penalty shootout point
+- Final result (win = 3, lose = 0, draw = 1)
 - Our domination time
 - Opp domination time
 - Our possession
