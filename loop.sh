@@ -91,7 +91,15 @@ do
 	shift 1
 done
 
-ls ${FILE}*.rcg > ${TMP_FILENAME}
+ls ${FILE}*.rcg > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+	ls ${FILE}*.rcg > ${TMP_FILENAME}
+fi
+ls ${FILE}*.rcg.gz > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+	ls ${FILE}*.rcg.gz >> ${TMP_FILENAME}
+fi
+
 count=0
 
 cat ${TMP_FILENAME} | while read log; do

@@ -3,10 +3,10 @@ from calculation import shoot
 from lib import lib_log_analyzer as lib
 
 
-def countKick( wm, cycle, side, feat ):
+def countKick( wm, cycle, feat ):
 
     # same timing kick is already considered
-    if ( side == "l" ):
+    if ( feat.target_team == "l" ):
         if ( wm[cycle+1].dominate_side == "l" ):
 
             direction = getPassRoute( wm, cycle )
@@ -33,7 +33,7 @@ def countKick( wm, cycle, side, feat ):
             elif ( direction == "back" ):
                 feat.opp_kick[3] += 1
 
-    elif ( side == "r" ):
+    elif ( feat.target_team == "r" ):
         if ( wm[cycle+1].dominate_side == "l" ):
 
             direction = getPassRoute( wm, cycle )
@@ -63,12 +63,12 @@ def countKick( wm, cycle, side, feat ):
     return direction
 
 
-def countPass( wm, cycle, direction, side, feat ):
+def countPass( wm, cycle, direction, feat ):
 
     if ( wm[cycle+1].dominate_side == wm[cycle].dominate_side \
          and wm[cycle+1].last_kicker_unum != wm[cycle].last_kicker_unum ):
 
-        if ( wm[cycle+1].dominate_side == side ):
+        if ( wm[cycle+1].dominate_side == feat.target_team ):
 
             if ( direction == "left" ):
                 if ( not __debug__ ):

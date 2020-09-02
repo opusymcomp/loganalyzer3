@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-#! /usr/bin/env python
+# ! /usr/bin/env python
 
 from lib import lib_log_analyzer as lib
+import itertools
 
-def appendSequence( feat, color ):
+def appendSequence( feat, color, kick_dist_thr ):
+    # feat.all_kick_path_x.append( feat.kick_path_x )
+    # feat.all_kick_path_y.append( feat.kick_path_y )
 
     INVALID_VALUE = -10000.0
 
@@ -14,114 +17,64 @@ def appendSequence( feat, color ):
     POSITIVE_LABEL = 1
     NEGATIVE_LABEL = 0
 
-    # kick_sequence( [ kick_cycle, x, y, teacher signal, sequence flag, kicker_unum, receiver_unum, opp1_x, opp1_y, ... ] )
+    # ignore the kick_paths whose distance is shorter than kick_dist_thr
+    tmp_kick_path_x = []
+    tmp_kick_path_y = []
 
-    for i in range( len( feat.kick_path_x ) ):
-        if ( i == len( feat.kick_path_x ) - 1 ):
-            if ( color == "ro-" ):
-                feat.kick_sequence.append( [ feat.kick_cycle[i], \
-                                             feat.kick_path_x[i], feat.kick_path_y[i], \
-                                             POSITIVE_LABEL, END_SEQUENCE, \
-                                             feat.kicker[i], feat.receiver[i], \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE ] )
-            elif ( color == "bo--" ):
-                feat.kick_sequence.append( [ feat.kick_cycle[i], \
-                                             feat.kick_path_x[i], feat.kick_path_y[i], \
-                                             NEGATIVE_LABEL, END_SEQUENCE, \
-                                             feat.kicker[i], feat.receiver[i], \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE, \
-                                             INVALID_VALUE, INVALID_VALUE ] )
-        elif ( i == 0 ):
-            if ( color == "ro-" ):
-                feat.kick_sequence.append( [ feat.kick_cycle[i], \
-                                             feat.kick_path_x[i], feat.kick_path_y[i], \
-                                             POSITIVE_LABEL, START_SEQUENCE, \
-                                             feat.kicker[i], feat.receiver[i], \
-                                             feat.opponent_from_ball[i][0].pos.x, feat.opponent_from_ball[i][0].pos.y, \
-                                             feat.opponent_from_ball[i][1].pos.x, feat.opponent_from_ball[i][1].pos.y, \
-                                             feat.opponent_from_ball[i][2].pos.x, feat.opponent_from_ball[i][2].pos.y, \
-                                             feat.opponent_from_ball[i][3].pos.x, feat.opponent_from_ball[i][3].pos.y, \
-                                             feat.opponent_from_ball[i][4].pos.x, feat.opponent_from_ball[i][4].pos.y, \
-                                             feat.opponent_from_ball[i][5].pos.x, feat.opponent_from_ball[i][5].pos.y, \
-                                             feat.opponent_from_ball[i][6].pos.x, feat.opponent_from_ball[i][6].pos.y, \
-                                             feat.opponent_from_ball[i][7].pos.x, feat.opponent_from_ball[i][7].pos.y, \
-                                             feat.opponent_from_ball[i][8].pos.x, feat.opponent_from_ball[i][8].pos.y, \
-                                             feat.opponent_from_ball[i][9].pos.x, feat.opponent_from_ball[i][9].pos.y, \
-                                             feat.opponent_from_ball[i][10].pos.x, feat.opponent_from_ball[i][10].pos.y ] )
-            elif ( color == "bo--" ):
-                feat.kick_sequence.append( [ feat.kick_cycle[i], \
-                                             feat.kick_path_x[i], feat.kick_path_y[i], \
-                                             NEGATIVE_LABEL, START_SEQUENCE, \
-                                             feat.kicker[i], feat.receiver[i], \
-                                             feat.opponent_from_ball[i][0].pos.x, feat.opponent_from_ball[i][0].pos.y, \
-                                             feat.opponent_from_ball[i][1].pos.x, feat.opponent_from_ball[i][1].pos.y, \
-                                             feat.opponent_from_ball[i][2].pos.x, feat.opponent_from_ball[i][2].pos.y, \
-                                             feat.opponent_from_ball[i][3].pos.x, feat.opponent_from_ball[i][3].pos.y, \
-                                             feat.opponent_from_ball[i][4].pos.x, feat.opponent_from_ball[i][4].pos.y, \
-                                             feat.opponent_from_ball[i][5].pos.x, feat.opponent_from_ball[i][5].pos.y, \
-                                             feat.opponent_from_ball[i][6].pos.x, feat.opponent_from_ball[i][6].pos.y, \
-                                             feat.opponent_from_ball[i][7].pos.x, feat.opponent_from_ball[i][7].pos.y, \
-                                             feat.opponent_from_ball[i][8].pos.x, feat.opponent_from_ball[i][8].pos.y, \
-                                             feat.opponent_from_ball[i][9].pos.x, feat.opponent_from_ball[i][9].pos.y, \
-                                             feat.opponent_from_ball[i][10].pos.x, feat.opponent_from_ball[i][10].pos.y ] )
+    # kick_sequence: ( [ kick_cycle, x, y, teacher signal, sequence flag, kicker_unum, receiver_unum, ...,
+    # mate1_x, mate1_y, mate1_bodyangle, mate1_neckangle, ... , opp1_x, opp1_y, opp1_bodyangle, opp1_neckangle, ... ] )
+    for i in range(len(feat.kick_path_x)):
+        sequence_flag = END_SEQUENCE if i == len(feat.kick_path_x) - 1 \
+            else START_SEQUENCE if i == 0 \
+            else BETWEEN_SEQUENCE
+        label = POSITIVE_LABEL if color == "ro-" \
+            else NEGATIVE_LABEL if color == "bo--" \
+            else None
+        if label is None:
+            raise SyntaxError
+        if sequence_flag == BETWEEN_SEQUENCE:
+            if lib.calcDistC(feat.kick_path_x[i], feat.kick_path_y[i], feat.kick_path_x[i-1], feat.kick_path_y[i-1]) < kick_dist_thr:
+                continue
+
+        tmp_kick_path_x.append(feat.kick_path_x[i])
+        tmp_kick_path_y.append(feat.kick_path_y[i])
+
+        tmp_kick_sequence = [feat.kick_cycle[i],
+                             feat.kick_path_x[i], feat.kick_path_y[i],
+                             label, sequence_flag,
+                             feat.kicker[i], feat.receiver[i]]
+
+        if sequence_flag == END_SEQUENCE:
+            # for teammate
+            tmp_kick_sequence.extend([INVALID_VALUE for _ in range(11 * 4)])
+            # for opponent
+            tmp_kick_sequence.extend([INVALID_VALUE for _ in range(11 * 4)])
         else:
-            if ( color == "ro-" ):
-                feat.kick_sequence.append( [ feat.kick_cycle[i], \
-                                             feat.kick_path_x[i], feat.kick_path_y[i], \
-                                             POSITIVE_LABEL, BETWEEN_SEQUENCE, \
-                                             feat.kicker[i], feat.receiver[i], \
-                                             feat.opponent_from_ball[i][0].pos.x, feat.opponent_from_ball[i][0].pos.y, \
-                                             feat.opponent_from_ball[i][1].pos.x, feat.opponent_from_ball[i][1].pos.y, \
-                                             feat.opponent_from_ball[i][2].pos.x, feat.opponent_from_ball[i][2].pos.y, \
-                                             feat.opponent_from_ball[i][3].pos.x, feat.opponent_from_ball[i][3].pos.y, \
-                                             feat.opponent_from_ball[i][4].pos.x, feat.opponent_from_ball[i][4].pos.y, \
-                                             feat.opponent_from_ball[i][5].pos.x, feat.opponent_from_ball[i][5].pos.y, \
-                                             feat.opponent_from_ball[i][6].pos.x, feat.opponent_from_ball[i][6].pos.y, \
-                                             feat.opponent_from_ball[i][7].pos.x, feat.opponent_from_ball[i][7].pos.y, \
-                                             feat.opponent_from_ball[i][8].pos.x, feat.opponent_from_ball[i][8].pos.y, \
-                                             feat.opponent_from_ball[i][9].pos.x, feat.opponent_from_ball[i][9].pos.y, \
-                                             feat.opponent_from_ball[i][10].pos.x, feat.opponent_from_ball[i][10].pos.y ] )
-            elif ( color == "bo--" ):
-                feat.kick_sequence.append( [ feat.kick_cycle[i], \
-                                             feat.kick_path_x[i], feat.kick_path_y[i], \
-                                             NEGATIVE_LABEL, BETWEEN_SEQUENCE, \
-                                             feat.kicker[i], feat.receiver[i], \
-                                             feat.opponent_from_ball[i][0].pos.x, feat.opponent_from_ball[i][0].pos.y, \
-                                             feat.opponent_from_ball[i][1].pos.x, feat.opponent_from_ball[i][1].pos.y, \
-                                             feat.opponent_from_ball[i][2].pos.x, feat.opponent_from_ball[i][2].pos.y, \
-                                             feat.opponent_from_ball[i][3].pos.x, feat.opponent_from_ball[i][3].pos.y, \
-                                             feat.opponent_from_ball[i][4].pos.x, feat.opponent_from_ball[i][4].pos.y, \
-                                             feat.opponent_from_ball[i][5].pos.x, feat.opponent_from_ball[i][5].pos.y, \
-                                             feat.opponent_from_ball[i][6].pos.x, feat.opponent_from_ball[i][6].pos.y, \
-                                             feat.opponent_from_ball[i][7].pos.x, feat.opponent_from_ball[i][7].pos.y, \
-                                             feat.opponent_from_ball[i][8].pos.x, feat.opponent_from_ball[i][8].pos.y, \
-                                             feat.opponent_from_ball[i][9].pos.x, feat.opponent_from_ball[i][9].pos.y, \
-                                             feat.opponent_from_ball[i][10].pos.x, feat.opponent_from_ball[i][10].pos.y ] )
+            # for teammate
+            tmp_kick_sequence.extend(
+                list(itertools.chain.from_iterable(
+                    [feat.teammate_from_ball[i][j].pos.x, feat.teammate_from_ball[i][j].pos.y,
+                     feat.teammate_from_ball[i][j].body_angle, feat.teammate_from_ball[i][j].neck_angle,
+                     ] for j in range(11))))
+            # for opponent
+            tmp_kick_sequence.extend(
+                list(itertools.chain.from_iterable(
+                    [feat.opponent_from_ball[i][j].pos.x, feat.opponent_from_ball[i][j].pos.y,
+                     feat.opponent_from_ball[i][j].body_angle, feat.opponent_from_ball[i][j].neck_angle,
+                     ] for j in range(11))))
+
+        feat.kick_sequence.append(tmp_kick_sequence)
+
+    # used for plotting kick_sequences
+    feat.all_kick_path_x.append( tmp_kick_path_x )
+    feat.all_kick_path_y.append( tmp_kick_path_y )
+    feat.color4plt_ks.append(color)
+    # feat.color4plt_ks.append('ro-')
 
 
-def printSequence( sp, feat ):
-
+def printSequence(sp, feat):
     import matplotlib
-    matplotlib.use('Agg')
+    # smatplotlib.use('Agg')
     from matplotlib import pyplot as plt
     import matplotlib.font_manager as fm
 
@@ -135,146 +88,173 @@ def printSequence( sp, feat ):
     ylim = sp.pitch_width / 2 + 5.0
     fm._rebuild()
 
-    plt.xlim( [-xlim, xlim] )
-    plt.ylim( [ylim, -ylim] )
+    plt.xlim([-xlim, xlim])
+    plt.ylim([ylim, -ylim])
 
     plt.tick_params(labelsize=32)
 
     # plot soccer fields
-    plt.plot( [ sp.goal_line_l, -sp.penalty_area_x ], [ -sp.penalty_area_y, -sp.penalty_area_y ], color='g', linewidth=4 )
-    plt.plot( [ sp.goal_line_l, -sp.penalty_area_x ], [ sp.penalty_area_y, sp.penalty_area_y ], color='g', linewidth=4 )
-    plt.plot( [ sp.goal_line_r, sp.penalty_area_x ], [ -sp.penalty_area_y, -sp.penalty_area_y ], color='g', linewidth=4 )
-    plt.plot( [ sp.goal_line_r, sp.penalty_area_x ], [ sp.penalty_area_y, sp.penalty_area_y ], color='g', linewidth=4 )
-    plt.plot( [ -sp.penalty_area_x, -sp.penalty_area_x ], [ sp.penalty_area_y, -sp.penalty_area_y ], color='g', linewidth=4 )
-    plt.plot( [ sp.penalty_area_x, sp.penalty_area_x ], [ sp.penalty_area_y, -sp.penalty_area_y ], color='g', linewidth=4 )
+    plt.plot([sp.goal_line_l, -sp.penalty_area_x], [-sp.penalty_area_y, -sp.penalty_area_y], color='g', linewidth=4)
+    plt.plot([sp.goal_line_l, -sp.penalty_area_x], [sp.penalty_area_y, sp.penalty_area_y], color='g', linewidth=4)
+    plt.plot([sp.goal_line_r, sp.penalty_area_x], [-sp.penalty_area_y, -sp.penalty_area_y], color='g', linewidth=4)
+    plt.plot([sp.goal_line_r, sp.penalty_area_x], [sp.penalty_area_y, sp.penalty_area_y], color='g', linewidth=4)
+    plt.plot([-sp.penalty_area_x, -sp.penalty_area_x], [sp.penalty_area_y, -sp.penalty_area_y], color='g', linewidth=4)
+    plt.plot([sp.penalty_area_x, sp.penalty_area_x], [sp.penalty_area_y, -sp.penalty_area_y], color='g', linewidth=4)
 
-    plt.plot( [ sp.goal_line_l, sp.goal_line_r ], [ -sp.pitch_width / 2, -sp.pitch_width / 2 ], color='g', linewidth=4 )
-    plt.plot( [ sp.goal_line_l, sp.goal_line_r ], [ sp.pitch_width / 2, sp.pitch_width / 2 ], color='g', linewidth=4 )
-    plt.plot( [ sp.goal_line_l, sp.goal_line_l ], [  -sp.pitch_width / 2, sp.pitch_width / 2 ], color='g', linewidth=4 )
-    plt.plot( [ sp.goal_line_r, sp.goal_line_r ], [  -sp.pitch_width / 2, sp.pitch_width / 2 ], color='g', linewidth=4 )
+    plt.plot([sp.goal_line_l, sp.goal_line_r], [-sp.pitch_width / 2, -sp.pitch_width / 2], color='g', linewidth=4)
+    plt.plot([sp.goal_line_l, sp.goal_line_r], [sp.pitch_width / 2, sp.pitch_width / 2], color='g', linewidth=4)
+    plt.plot([sp.goal_line_l, sp.goal_line_l], [-sp.pitch_width / 2, sp.pitch_width / 2], color='g', linewidth=4)
+    plt.plot([sp.goal_line_r, sp.goal_line_r], [-sp.pitch_width / 2, sp.pitch_width / 2], color='g', linewidth=4)
 
-    plt.plot( [ 0, 0 ], [  -sp.pitch_width / 2, sp.pitch_width / 2 ], color='g', linewidth=4 )
+    plt.plot([0, 0], [-sp.pitch_width / 2, sp.pitch_width / 2], color='g', linewidth=4)
     p = plt.Circle((0.0, 0.0), 9.0, color='g', linewidth=4, fill=False)
 
     ax = plt.gca()
     ax.add_patch(p)
 
-    for x, y, color in zip( feat.all_kick_path_x, feat.all_kick_path_y, feat.color4plt_ks ):
-        plt.plot( x, y, color )
+    for x, y, color in zip(feat.all_kick_path_x, feat.all_kick_path_y, feat.color4plt_ks):
+        plt.plot(x, y, color)
 
-    filename= feat.team_point[0] + "-kick_sequence"
+    filename = feat.team_point[0] + "-kick_sequence"
     extension = [".eps", ".pdf", ".png", ".svg"]
     for e in extension:
-        plt.savefig(filename+e, dpi=300, bbox_inches="tight", transparent=True)
-    #plt.show()
+        plt.savefig(filename + e, dpi=300, bbox_inches="tight", transparent=True)
+    plt.show()
 
-def finishSequence( feat, color ):
 
-    feat.all_kick_path_x.append( feat.kick_path_x )
-    feat.all_kick_path_y.append( feat.kick_path_y )
-    feat.color4plt_ks.append(color)
-    #feat.color4plt_ks.append('ro-')
+def finishSequence( feat, color, kick_dist_thr ):
 
-    appendSequence( feat, color )
+    appendSequence( feat, color, kick_dist_thr=kick_dist_thr )
     clearList( feat )
 
-def clearList( feat ):
 
+def clearList(feat):
     feat.kick_cycle = []
     feat.kick_path_x = []
     feat.kick_path_y = []
     feat.kicker = []
     feat.receiver = []
-    feat.opponent_pos = []
+    feat.teammate_from_ball = []
+    feat.opponent_from_ball = []
 
-def getSequence( wm, sp, cycle, team, feat ):
 
+def getSequence( wm, sp, cycle, feat, until_penalty_area=True, kick_dist_thr=3.0 ):
     last_kick_side = wm[cycle].dominate_side
     last_kick_cycle = wm[cycle].last_kicked_cycle - 1
 
-    kick_side = wm[cycle+1].dominate_side
+    kick_side = wm[cycle + 1].dominate_side
     kick_cycle = cycle
 
     NO_KICK = -1
     NO_KICKER = 0
     NO_RECEIVER = 0
 
-    if ( kick_side == team ):
+    if (kick_side == feat.target_team):
 
         kicked_from = wm[cycle].last_kicker_unum + 1
-        kicked_to = wm[cycle+1].last_kicker_unum + 1
+        kicked_to = wm[cycle + 1].last_kicker_unum + 1
 
         # Exit situations
-        for i in range( last_kick_cycle, kick_cycle ):
+        for i in range(last_kick_cycle, kick_cycle):
 
             for say in wm[i].referee.say:
-
-                # goal from out of penalty area
-                if ( "goal_" + team in say ):
-                    feat.kick_cycle.append( NO_KICK )
-                    feat.kick_path_x.append( wm[i].ball.pos.x )
-                    feat.kick_path_y.append( wm[i].ball.pos.y )
-                    feat.kicker.append( kicked_from )
-                    feat.receiver.append( NO_RECEIVER )
-                    finishSequence( feat, "ro-" )
-                    return 1
-
                 # considering own goal
-                elif ( "goal_" in say \
+                # last kick: our, kick_off: our -> own goal
+                if ( "goal_" in say
                        and not "goal_kick_" in say ):
-                    finishSequence( feat, "bo--" )
+                    finishSequence( feat, "bo--", kick_dist_thr=kick_dist_thr )
                     return 0
 
         # attention to ball
-        feat.kick_cycle.append( kick_cycle )
-        feat.kick_path_x.append( wm[ cycle ].ball.pos.x )
-        feat.kick_path_y.append( wm[ cycle ].ball.pos.y )
-        if ( team == "l" ):
-            feat.opponent_from_ball.append( lib.sortPlayerUnumFromPos( wm[ cycle ].r.player, wm[ cycle ].ball.pos ) )
-        elif ( team == "r" ):
-            feat.opponent_from_ball.append( lib.sortPlayerUnumFromPos( wm[ cycle ].l.player, wm[ cycle ].ball.pos ) )
+        feat.kick_cycle.append(kick_cycle)
+        feat.kick_path_x.append(wm[cycle].ball.pos.x)
+        feat.kick_path_y.append(wm[cycle].ball.pos.y)
+        if feat.target_team == "l":
+            feat.teammate_from_ball.append(lib.sortPlayerUnumFromPos(wm[cycle].l.player, wm[cycle].ball.pos))
+            feat.opponent_from_ball.append(lib.sortPlayerUnumFromPos(wm[cycle].r.player, wm[cycle].ball.pos))
+        elif feat.target_team == "r":
+            feat.teammate_from_ball.append(lib.sortPlayerUnumFromPos(wm[cycle].r.player, wm[cycle].ball.pos))
+            feat.opponent_from_ball.append(lib.sortPlayerUnumFromPos(wm[cycle].l.player, wm[cycle].ball.pos))
 
         # start sequence
-        if ( last_kick_side != team ):
-            feat.kicker.append( NO_KICKER )
-            feat.receiver.append( kicked_to )
+        if last_kick_side != feat.target_team:
+            feat.kicker.append(NO_KICKER)
+            feat.receiver.append(kicked_to)
         # continue sequence
         else:
-            feat.kicker.append( kicked_from )
-            feat.receiver.append( kicked_to )
+            feat.kicker.append(kicked_from)
+            feat.receiver.append(kicked_to)
 
         # Exit situations
-        if ( wm[ cycle ].ball.pos.x > sp.penalty_area_x and \
-             abs( wm[ cycle ].ball.pos.y ) < sp.penalty_area_y ):
+        if feat.target_team == "l":
+            if (wm[cycle].ball.pos.x > sp.penalty_area_x
+                    and abs(wm[cycle].ball.pos.y) < sp.penalty_area_y):
 
-            # isSequence
-            if ( len( feat.kick_path_x ) > 1 ):
-                finishSequence( feat, "ro-" )
-                return 1
+                # isSequence
+                if len( feat.kick_path_x ) > 1:
+                    finishSequence( feat, "ro-", kick_dist_thr=kick_dist_thr ) if until_penalty_area else None
+                    return 1
 
-            # notSequence
-            else:
-                clearList( feat )
+                # notSequence
+                else:
+                    clearList(feat)
+
+        elif feat.target_team == "r":
+            if (wm[cycle].ball.pos.x < - sp.penalty_area_x
+                    and abs(wm[cycle].ball.pos.y) < sp.penalty_area_y):
+
+                # isSequence
+                if len( feat.kick_path_x ) > 1:
+                    finishSequence( feat, "ro-", kick_dist_thr=kick_dist_thr ) if until_penalty_area else None
+                    return 1
+
+                # notSequence
+                else:
+                    clearList(feat)
 
     # Exit situations
-    elif ( kick_side != team ):
+    elif kick_side != feat.target_team:
 
-        kicked_from = wm[cycle].last_kicker_unum+1
+        kicked_from = wm[cycle].last_kicker_unum + 1
         kicked_to = 0
 
-        # goal_kick or corner_kick
-        for i in range( last_kick_cycle, kick_cycle ):
+        for i in range(last_kick_cycle, kick_cycle):
 
-            for say in wm[i].referee.say:
-                # sequence end when ball leaves the pitch
-                if( "goal_kick_" in say \
-                    or "corner_kick_" in say ):
-                    feat.kick_cycle.append( NO_KICK )
-                    feat.kick_path_x.append( wm[i-1].ball.pos.x )
-                    feat.kick_path_y.append( wm[i-1].ball.pos.y )
-                    feat.kicker.append( kicked_from )
-                    feat.receiver.append( NO_RECEIVER )
-                    finishSequence( feat, "bo--" )
+            # is sequence
+            if len(feat.kick_path_x) > 0:
+                for say in wm[i].referee.say:
+                    # goal from out of target area
+                    if "goal_" + feat.target_team in say:
+                        feat.kick_cycle.append(NO_KICK)
+                        feat.kick_path_x.append(wm[i].ball.pos.x)
+                        feat.kick_path_y.append(wm[i].ball.pos.y)
+                        feat.kicker.append(kicked_from)
+                        feat.receiver.append(NO_RECEIVER)
+                        finishSequence(feat, "ro-", kick_dist_thr=kick_dist_thr)
+                        return 1
+
+                    # goal_kick or corner_kick
+                    # sequence end when ball leaves the pitch
+                    if( "goal_kick_" in say
+                        or "corner_kick_" in say
+                        or "half_time" in say):
+                        feat.kick_cycle.append( NO_KICK )
+                        feat.kick_path_x.append( wm[i-1].ball.pos.x )
+                        feat.kick_path_y.append( wm[i-1].ball.pos.y )
+                        feat.kicker.append( kicked_from )
+                        feat.receiver.append( NO_RECEIVER )
+                        finishSequence( feat, "bo--", kick_dist_thr=kick_dist_thr )
+                        return 0
+
+                    # goalie catch
+                    if "goalie_catch_" in say:
+                        feat.kick_cycle.append(NO_KICK)
+                        feat.kick_path_x.append(wm[i].ball.pos.x)
+                        feat.kick_path_y.append(wm[i].ball.pos.y)
+                        feat.kicker.append(kicked_from)
+                        feat.receiver.append(NO_RECEIVER)
+                        finishSequence(feat, "bo--", kick_dist_thr=kick_dist_thr)
+                        return 0
 
         # isSequence and intercepted
         if ( len( feat.kick_path_x ) > 0 ):
@@ -283,26 +263,32 @@ def getSequence( wm, sp, cycle, team, feat ):
             feat.kick_path_y.append( wm[ cycle ].ball.pos.y )
             feat.kicker.append( kicked_from )
             feat.receiver.append( NO_RECEIVER )
-        finishSequence( feat, "bo--" )
+        finishSequence( feat, "bo--", kick_dist_thr=kick_dist_thr )
 
     return 0
 
 
-
+def considerSameTimingKick(wm, cycle, feat, kick_dist_thr=3.0):
+    if (len(feat.kick_path_x) > 0):
+        feat.kick_cycle.append(cycle)
+        feat.kick_path_x.append(wm[cycle].ball.pos.x)
+        feat.kick_path_y.append(wm[cycle].ball.pos.y)
+        feat.kicker.append(wm[cycle].last_kicker_unum + 1)
+        feat.receiver.append(0)
+        finishSequence(feat, "bo--", kick_dist_thr=kick_dist_thr)
 
 
 def saveKickSequence(feat, outputKickedCycle=False):
-
     # kick_sequence data
     # named 'nn_kick_data.csv' before
 
     with open('kick_sequence.csv', 'a') as f:
-        for i in range( len(feat.kick_sequence) ):
-            if ( outputKickedCycle ):
-                f.write( str( feat.kick_sequence[i][0] ) + "," )
-            for j in range( 1, len( feat.kick_sequence[i] ) ):
-                f.write( str( feat.kick_sequence[i][j] ) )
-                if ( j == len( feat.kick_sequence[i] ) - 1 ):
-                    f.write( "\n" )
+        for i in range(len(feat.kick_sequence)):
+            if outputKickedCycle:
+                f.write(str(feat.kick_sequence[i][0]) + ",")
+            for j in range(1, len(feat.kick_sequence[i])):
+                f.write(str(feat.kick_sequence[i][j]))
+                if j == len(feat.kick_sequence[i]) - 1:
+                    f.write("\n")
                 else:
-                    f.write( "," )
+                    f.write(",")

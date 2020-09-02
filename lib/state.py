@@ -1,4 +1,4 @@
-from lib import lib_log_analyzer as lib
+#!/usr/bin/env python
 
 def isGoalie( cycle, unum, side, wm ):
 

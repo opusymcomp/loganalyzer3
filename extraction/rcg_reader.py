@@ -1,5 +1,4 @@
-from lib import lib_log_analyzer as lib
-
+#!/usr/bin/env python
 
 
 def getInformation( tmp_line, wm ):

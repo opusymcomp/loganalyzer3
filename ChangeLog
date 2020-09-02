@@ -1,3 +1,104 @@
+2020-07-22  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * calculation/calculate.py:
+    - kick_dist_thrを0.0に設定
+    * calculation/kick_distribution.py:
+    - キック方向を出力に追加
+
+2020-05-02  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * extraction/extract.py:
+    * extraction/filename_split.py:
+    * lib/la_class.py:
+    * lib/option.py:
+    * calculation/calculate.py:
+    - ペナルティシュートアウトを含むログファイルに対応
+    - ボール支配時間のIndex名を変更（dominate_time→domination_time）
+    - ボールポゼッションの定義を変更（支配時間/総時間→支配時間/（支配時間+敵支配時間））
+
+    * lib/lib_log_analyzer.py:
+    - 不要な関数を削除
+    - 最終試合結果出力を0,1から勝ち点に変更（勝3,引1，負0）
+
+2020-05-01  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * calculation/kick_sequence.py:
+    * calculation/calculate.py:
+    - キックシーケンス抽出部分の改良
+
+    * build.sh:
+    - build用のシェルスクリプトを追加（clear用のものは削除）
+
+2020-04-30  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * calculation/kick_sequence.py:
+    - キックシーケンスの出力を追加．ボディアングルとネックアングルを出力するように．
+    * extraction/extract.py:
+    - リファクタリング
+
+2020-03-07  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * calculation/*.pxd, *.py:
+    * extraction/*.pxd, *.py:
+    * lib/*.pxd, *.py:
+    * setup.py:
+    * clean.sh:
+    - cythonに対応
+
+    * calculation/kick_sequence.py:
+    - 距離が閾値以下のものはキックシーケンスに加えないように設定
+
+    * README.md:
+    - 更新
+
+2020-03-05  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+	* extraction/extract.py:
+	- rcgファイルから試合結果を取ってくる部分を修正
+
+	* extraction/calculate.py:
+	- キックシーケンス取得時における選手位置のクリアができていなかった
+	バグを修正
+
+2020-02-19  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+	* calculation/calculate.py:
+	* calculation/kick_sequence.py:
+	* lib/la_class.py:
+	- キックシーケンスに味方位置情報を追加
+
+	* loop.sh:
+	エラー出力を出さないように修正
+
+2019-06-27  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+	* .gitignore:
+	- gitignoreの追加
+
+	* calculation/calculate.py:
+	* calculation/kick_sequence.py:
+	- goalie catchの動作不良を解消
+	- 敵行動軌跡の出力に対応
+
+	* loop.sh:
+	- 圧縮ファイルのループに対応
+
+2019-06-27  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+	* calculation/calculate.py:
+	* calculation/dribble_count.py:
+	* calculation/kick_sequence.py:
+	* calculation/pass_check.py:
+	* calculation/through_pass.py:
+	* extraction/extract.py:
+	* extraction/filename_split.py:
+	* lib/la_class.py:
+	* lib/lib_log_analyzer.py:
+	* main.py:
+	- 圧縮ファイル(.gz)でも読み込み可能に実装．
+	- ファイル名からではなくrcgファイルから試合結果を取ってくるように変更．
+	- 上記変更に伴い，各参照ファイルを修正
+
 2019-04-28  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
 
 	* calculation/calculate.py:
