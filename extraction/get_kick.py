@@ -1,4 +1,4 @@
-from lib import lib_log_analyzer as lib
+#!/usr/bin/env python
 
 from extraction import get_tackle as gt
 

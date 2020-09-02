@@ -1,14 +1,14 @@
-from extraction import get_kick as gk
+#!/usr/bin/env python
+
 from extraction import get_dash as gd
-from lib import lib_log_analyzer as lib
 
 
-def countDribble( wm, cycle, side, feat ):
+def countDribble( wm, cycle, feat ):
 
 
     if ( wm[cycle + 1].last_kicker_unum == wm[cycle].last_kicker_unum ):
 
-        if ( wm[cycle].dominate_side == side ):
+        if ( wm[cycle].dominate_side == feat.target_team ):
 
             if ( gd.isDash( wm, cycle ) ):
 

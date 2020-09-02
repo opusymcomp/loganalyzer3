@@ -26,12 +26,12 @@ def isThroughPass( wm, cycle ):
 
 
 
-def countThroughPass( wm, cycle, team, feat ):
+def countThroughPass( wm, cycle, feat ):
 
     if ( isThroughPass( wm, cycle ) ):
         if ( not __debug__ ):
             print ( "this pass is through pass" )
-        if ( wm[cycle+1].dominate_side == team ):
+        if ( wm[cycle+1].dominate_side == feat.target_team ):
             feat.our_through_pass += 1
         else:
             feat.opp_through_pass += 1

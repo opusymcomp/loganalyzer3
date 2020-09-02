@@ -3,17 +3,21 @@
 
 from lib import lib_log_analyzer as lib
 
-def saveKickDistribution( feat ):
+def saveKickDistribution( feat, degree_range=90 ):
 
     with open( 'kick_distribution.csv', 'a' ) as f:
 
-        f_left = open("kick_distribution_left.csv", "a")
-        f_right = open("kick_distribution_right.csv", "a")
-        f_front = open("kick_distribution_front.csv", "a")
-        f_back = open("kick_distribution_back.csv", "a")
+        file_pointers = []
+        for i in range(-180, 180, degree_range):
+            fp = open("kick_distribution_{}_{}.csv".format(i, i+degree_range), "a")
+            file_pointers.append(fp)
         f_success = open("kick_distribution_success.csv", "a")
 
         for i in range( len( feat.kick_sequence ) - 1 ):
+            degree = lib.changeRadianToDegree(lib.calcRadianC(feat.kick_sequence[i][1], feat.kick_sequence[i][2],
+                                                              feat.kick_sequence[i + 1][1],
+                                                              feat.kick_sequence[i + 1][2]))
+
             # if not terminal condition
             if ( feat.kick_sequence[i][4] != -1 \
                  and feat.kick_sequence[i+1][4] != 0 ):
@@ -22,7 +26,8 @@ def saveKickDistribution( feat ):
                          str( lib.calcDistC( feat.kick_sequence[i][1],
                                              feat.kick_sequence[i][2],
                                              feat.kick_sequence[i+1][1],
-                                             feat.kick_sequence[i+1][2] ) ) +
+                                             feat.kick_sequence[i+1][2] ) ) + ',' +
+                         str(degree) +
                          str('\n') )
 
                 if (feat.kick_sequence[i][3] == 1):
@@ -31,55 +36,29 @@ def saveKickDistribution( feat ):
                              str( lib.calcDistC( feat.kick_sequence[i][1],
                                                  feat.kick_sequence[i][2],
                                                  feat.kick_sequence[i+1][1],
-                                                 feat.kick_sequence[i+1][2] ) ) +
+                                                 feat.kick_sequence[i+1][2] ) ) + ',' +
+                             str(degree) +
                              str('\n') )
 
-                degree = lib.changeRadianToDegree(lib.calcRadianC(feat.kick_sequence[i][1], feat.kick_sequence[i][2],
-                                                                  feat.kick_sequence[i+1][1], feat.kick_sequence[i+1][2]))
-                if (degree > -45.0 and degree <= 45.0):
-                    f_front.write( str( feat.kick_sequence[i][1] ) + ',' +
-                                   str( feat.kick_sequence[i][2] ) + ',' +
-                                   str( lib.calcDistC( feat.kick_sequence[i][1],
-                                                       feat.kick_sequence[i][2],
-                                                       feat.kick_sequence[i+1][1],
-                                                       feat.kick_sequence[i+1][2] ) ) +
-                                   str('\n') )
-                elif (degree > 45.0 and degree <= 135.0):
-                    f_right.write( str( feat.kick_sequence[i][1] ) + ',' +
-                                   str( feat.kick_sequence[i][2] ) + ',' +
-                                   str( lib.calcDistC( feat.kick_sequence[i][1],
-                                                       feat.kick_sequence[i][2],
-                                                       feat.kick_sequence[i+1][1],
-                                                       feat.kick_sequence[i+1][2] ) ) +
-                                   str('\n') )
-                elif (degree > 135.0 or degree <= -135.0):
-                    f_back.write( str( feat.kick_sequence[i][1] ) + ',' +
-                                  str( feat.kick_sequence[i][2] ) + ',' +
-                                  str( lib.calcDistC( feat.kick_sequence[i][1],
-                                                      feat.kick_sequence[i][2],
-                                                      feat.kick_sequence[i+1][1],
-                                                      feat.kick_sequence[i+1][2] ) ) +
-                                   str('\n') )
-                elif( degree > -135.0 and degree <= -45.0 ):
-                    f_left.write( str( feat.kick_sequence[i][1] ) + ',' +
-                                  str( feat.kick_sequence[i][2] ) + ',' +
-                                  str( lib.calcDistC( feat.kick_sequence[i][1],
-                                                      feat.kick_sequence[i][2],
-                                                      feat.kick_sequence[i+1][1],
-                                                      feat.kick_sequence[i+1][2] ) ) +
-                                   str('\n') )
+                fp_ind = int((degree + 180) / degree_range)
 
+                file_pointers[fp_ind].write( str( feat.kick_sequence[i][1] ) + ',' +
+                                             str( feat.kick_sequence[i][2] ) + ',' +
+                                             str( lib.calcDistC( feat.kick_sequence[i][1],
+                                                                 feat.kick_sequence[i][2],
+                                                                 feat.kick_sequence[i+1][1],
+                                                                 feat.kick_sequence[i+1][2] ) ) + ',' +
+                                             str(degree) +
+                                             str('\n') )
 
-        f_left.close()
-        f_right.close()
-        f_front.close()
-        f_back.close()
+        for fp in file_pointers:
+            fp.close()
         f_success.close()
 
 def printKickDistribution( sp, feat ):
 
     import matplotlib
-    matplotlib.use('Agg')
+    #matplotlib.use('Agg')
     from mpl_toolkits.mplot3d import Axes3D
     from matplotlib.patches import Circle
     import mpl_toolkits.mplot3d.art3d as art3d
@@ -145,4 +124,4 @@ def printKickDistribution( sp, feat ):
     extension = [".eps", ".pdf", ".png", ".svg"]
     for e in extension:
         plt.savefig(filename+e, dpi=300, bbox_inches="tight", transparent=True)
-    #plt.show()
+    plt.show()

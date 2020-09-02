@@ -1,34 +1,33 @@
 # -*- coding: utf-8 -*-
-# hori
+# implemented by Hori
 
 import math
 import re
 
 from lib import lib_log_analyzer as lib
 
-def sucShoot( side, kick, goal ):
-
-    cnt = 0
-    cycle = -1
-    lastKicker = []
-
-    for g in goal:
-        if( g[1] == team ):
-            for k in kick:
-                if( k[1] < g[0] ):
-                    if( cycle != k[1] ):
-                        lastKicker = []
-                    lastKicker.append( k )
-                    cycle = k[1]
-                else:
-                    break
-            for lk in lastKicker:
-                if( lk[0] == g[1] ):
-                    cnt += 1
-                    break
-
-    return cnt
-
+# def sucShoot( side, kick, goal ):
+#
+#     cnt = 0
+#     cycle = -1
+#     lastKicker = []
+#
+#     for g in goal:
+#         if( g[1] == team ):
+#             for k in kick:
+#                 if( k[1] < g[0] ):
+#                     if( cycle != k[1] ):
+#                         lastKicker = []
+#                     lastKicker.append( k )
+#                     cycle = k[1]
+#                 else:
+#                     break
+#             for lk in lastKicker:
+#                 if( lk[0] == g[1] ):
+#                     cnt += 1
+#                     break
+#
+#     return cnt
 
 
 def isOurShoot( wm, sp, cycle, side ):

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+
 import csv
 from . import lib_log_analyzer as lib
+
 
 class Feature:
     def __init__(self):
@@ -9,71 +11,75 @@ class Feature:
         # pass = [ left, right, front, back ]
         # pass_probability = [ all, penalty_area, attacking_third, middle_third, defensive_third ]
 
-        self.index =  [ "date",
-                        "our_team",
-                        "opp_team",
-                        "our_final_team_point",
-                        "opp_final_team_point",
-                        "final_result", #win 1, lose or draw 0
-                        "our_dominate_time",
-                        "opp_dominate_time",
-                        "our_possession",
-                        "opp_possession",
-                        "our_yellow",
-                        "opp_yellow",
-                        #"our_kick_all",
-                        #"our_kick_L",
-                        #"our_kick_R",
-                        #"our_kick_F",
-                        #"our_kick_B",
-                        #"opp_kick_all",
-                        #"opp_kick_L",
-                        #"opp_kick_R",
-                        #"opp_kick_F",
-                        #"opp_kick_B",
-                        "our_pass_all",
-                        "our_pass_L",
-                        "our_pass_R",
-                        "our_pass_F",
-                        "our_pass_B",
-                        "opp_pass_all",
-                        "opp_pass_L",
-                        "opp_pass_R",
-                        "opp_pass_F",
-                        "opp_pass_B",
-                        "our_through_pass",
-                        "opp_through_pass",
-                        "our_successed_tackle",
-                        "our_failed_tackle",
-                        "opp_successed_tackle",
-                        "opp_failed_tackle",
-                        "our_shoot",
-                        "opp_shoot",
-                        "our_point",
-                        "opp_point",
-                        "our_dribble",
-                        "opp_dribble",
-                        "our_penalty_area",
-                        "opp_penalty_area",
-                        "our_disconnected_player",
-                        "opp_disconnected_player"]
+        self.logname = ""
+        self.target_team = "none"
 
+        self.index = ["date",
+                      "our_team",
+                      "opp_team",
+                      "our_final_team_point",
+                      "opp_final_team_point",
+                      "our_penalty_shootout_point",
+                      "opp_penalty_shootout_point",
+                      "final_result",  # win 3, lose 0 draw 1
+                      "our_domination_time",
+                      "opp_domination_time",
+                      "our_possession",
+                      "opp_possession",
+                      "our_yellow",
+                      "opp_yellow",
+                      # "our_kick_all",
+                      # "our_kick_L",
+                      # "our_kick_R",
+                      # "our_kick_F",
+                      # "our_kick_B",
+                      # "opp_kick_all",
+                      # "opp_kick_L",
+                      # "opp_kick_R",
+                      # "opp_kick_F",
+                      # "opp_kick_B",
+                      "our_pass_all",
+                      "our_pass_L",
+                      "our_pass_R",
+                      "our_pass_F",
+                      "our_pass_B",
+                      "opp_pass_all",
+                      "opp_pass_L",
+                      "opp_pass_R",
+                      "opp_pass_F",
+                      "opp_pass_B",
+                      "our_through_pass",
+                      "opp_through_pass",
+                      "our_successed_tackle",
+                      "our_failed_tackle",
+                      "opp_successed_tackle",
+                      "opp_failed_tackle",
+                      "our_shoot",
+                      "opp_shoot",
+                      "our_point",
+                      "opp_point",
+                      "our_dribble",
+                      "opp_dribble",
+                      "our_penalty_area",
+                      "opp_penalty_area",
+                      "our_disconnected_player",
+                      "opp_disconnected_player"]
 
         # for calculate kick_sequence
-        self.target_team = "none"
         self.kick_cycle = []
         self.kick_path_x = []
         self.kick_path_y = []
         self.all_kick_path_x = []
         self.all_kick_path_y = []
         self.color4plt_ks = []
-        self.opponent_from_ball = [] # sorted from ball
+        self.teammate_from_ball = []  # sorted from ball
+        self.opponent_from_ball = []  # sorted from ball
         self.kicker = []
         self.receiver = []
         self.kick_sequence = []
 
         # for output
-        self.team_point = [ "0", "0", 0, 0 ]
+        self.team_point = ["0", "0", 0, 0, 0, 0]
         self.date = ""
         self.final_result = 0
         self.our_yellow = 0
@@ -88,10 +94,10 @@ class Feature:
         self.opp_dominate_time = 0
         self.our_possession = 0.0
         self.opp_possession = 0.0
-        self.our_kick = [ 0, 0, 0, 0 ]
-        self.opp_kick = [ 0, 0, 0, 0 ]
-        self.our_pass = [ 0, 0, 0, 0 ]
-        self.opp_pass = [ 0, 0, 0, 0 ]
+        self.our_kick = [0, 0, 0, 0]
+        self.opp_kick = [0, 0, 0, 0]
+        self.our_pass = [0, 0, 0, 0]
+        self.opp_pass = [0, 0, 0, 0]
         self.pass_propability = []
         self.our_through_pass = 0
         self.opp_through_pass = 0
@@ -100,151 +106,147 @@ class Feature:
         self.opp_point = 0
         self.our_dribble = 0
         self.opp_dribble = 0
-        #self.our_dribble_dist = 0
-        #self.opp_dribble_dist = 0
+        # self.our_dribble_dist = 0
+        # self.opp_dribble_dist = 0
         self.our_penalty_area = 0
         self.opp_penalty_area = -1
         self.our_disconnected_player = 0
         self.opp_disconnected_player = 0
 
-
-    def outputIndexForIR( self, start, end ):
-
+    def outputIndexForIR(self, start, end):
         fname = str(start) + "-" + str(end) + ".csv"
-        f = open( fname, 'a' )
+        f = open(fname, 'a')
 
         csvWriter = csv.writer(f)
-        csvWriter.writerow( self.index )
+        csvWriter.writerow(self.index)
         f.close()
 
-    def outputIndexForR( self, filename, side ):
-
-        our_team = lib.getTeamName( filename, side )
+    def outputIndexForR(self, our_team):
         fname = our_team + ".csv"
-        f = open( fname, 'a' )
+        f = open(fname, 'a')
 
         csvWriter = csv.writer(f)
-        csvWriter.writerow( self.index )
+        csvWriter.writerow(self.index)
         f.close()
 
-    def outputIntegrateResult( self, start, end ):
-
+    def outputIntegrateResult(self, start, end):
         fname = str(start) + "-" + str(end) + ".csv"
-        f = open( fname, 'a' )
+        f = open(fname, 'a')
 
         csvWriter = csv.writer(f)
 
-        result = [ self.date,
-                   self.team_point[0],
-                   self.team_point[1],
-                   self.team_point[2],
-                   self.team_point[3],
-                   self.final_result,
-                   self.our_dominate_time,
-                   self.opp_dominate_time,
-                   self.our_possession,
-                   self.opp_possession,
-                   self.our_yellow,
-                   self.opp_yellow,
-                   #sum( self.our_kick ),
-                   #self.our_kick[0],
-                   #self.our_kick[1],
-                   #self.our_kick[2],
-                   #self.our_kick[3],
-                   #sum( self.opp_kick ),
-                   #self.opp_kick[0],
-                   #self.opp_kick[1],
-                   #self.opp_kick[2],
-                   #self.opp_kick[3],
-                   sum( self.our_pass ),
-                   self.our_pass[0],
-                   self.our_pass[1],
-                   self.our_pass[2],
-                   self.our_pass[3],
-                   sum( self.opp_pass ),
-                   self.opp_pass[0],
-                   self.opp_pass[1],
-                   self.opp_pass[2],
-                   self.opp_pass[3],
-                   self.our_through_pass,
-                   self.opp_through_pass,
-                   self.our_tackle,
-                   self.all_our_tackle - self.our_tackle,
-                   self.opp_tackle,
-                   self.all_opp_tackle - self.opp_tackle,
-                   self.our_shoot,
-                   self.opp_shoot,
-                   self.our_point,
-                   self.opp_point,
-                   self.our_dribble,
-                   self.opp_dribble,
-                   self.our_penalty_area,
-                   self.opp_penalty_area,
-                   self.our_disconnected_player,
-                   self.opp_disconnected_player]
+        result = [self.date,
+                  self.team_point[0],
+                  self.team_point[1],
+                  self.team_point[2],
+                  self.team_point[3],
+                  self.team_point[4],
+                  self.team_point[5],
+                  self.final_result,
+                  self.our_dominate_time,
+                  self.opp_dominate_time,
+                  self.our_possession,
+                  self.opp_possession,
+                  self.our_yellow,
+                  self.opp_yellow,
+                  # sum( self.our_kick ),
+                  # self.our_kick[0],
+                  # self.our_kick[1],
+                  # self.our_kick[2],
+                  # self.our_kick[3],
+                  # sum( self.opp_kick ),
+                  # self.opp_kick[0],
+                  # self.opp_kick[1],
+                  # self.opp_kick[2],
+                  # self.opp_kick[3],
+                  sum(self.our_pass),
+                  self.our_pass[0],
+                  self.our_pass[1],
+                  self.our_pass[2],
+                  self.our_pass[3],
+                  sum(self.opp_pass),
+                  self.opp_pass[0],
+                  self.opp_pass[1],
+                  self.opp_pass[2],
+                  self.opp_pass[3],
+                  self.our_through_pass,
+                  self.opp_through_pass,
+                  self.our_tackle,
+                  self.all_our_tackle - self.our_tackle,
+                  self.opp_tackle,
+                  self.all_opp_tackle - self.opp_tackle,
+                  self.our_shoot,
+                  self.opp_shoot,
+                  self.our_point,
+                  self.opp_point,
+                  self.our_dribble,
+                  self.opp_dribble,
+                  self.our_penalty_area,
+                  self.opp_penalty_area,
+                  self.our_disconnected_player,
+                  self.opp_disconnected_player]
 
-        csvWriter.writerow( result )
+        csvWriter.writerow(result)
         f.close()
 
-
-    def outputResult( self, filename, side ):
-
-        our_team = lib.getTeamName( filename, side )
+    def outputResult(self, our_team):
         fname = our_team + ".csv"
-        f = open( fname, 'a' )
+        f = open(fname, 'a')
 
         csvWriter = csv.writer(f)
 
-        result = [ self.date,
-                   self.team_point[0],
-                   self.team_point[1],
-                   self.team_point[2],
-                   self.team_point[3],
-                   self.final_result,
-                   self.our_dominate_time,
-                   self.opp_dominate_time,
-                   self.our_possession,
-                   self.opp_possession,
-                   self.our_yellow,
-                   self.opp_yellow,
-                   #sum( self.our_kick ),
-                   #self.our_kick[0],
-                   #self.our_kick[1],
-                   #self.our_kick[2],
-                   #self.our_kick[3],
-                   #sum( self.opp_kick ),
-                   #self.opp_kick[0],
-                   #self.opp_kick[1],
-                   #self.opp_kick[2],
-                   #self.opp_kick[3],
-                   sum( self.our_pass ),
-                   self.our_pass[0],
-                   self.our_pass[1],
-                   self.our_pass[2],
-                   self.our_pass[3],
-                   sum( self.opp_pass ),
-                   self.opp_pass[0],
-                   self.opp_pass[1],
-                   self.opp_pass[2],
-                   self.opp_pass[3],
-                   self.our_through_pass,
-                   self.opp_through_pass,
-                   self.our_tackle,
-                   self.all_our_tackle - self.our_tackle,
-                   self.opp_tackle,
-                   self.all_opp_tackle - self.opp_tackle,
-                   self.our_shoot,
-                   self.opp_shoot,
-                   self.our_point,
-                   self.opp_point,
-                   self.our_dribble,
-                   self.opp_dribble,
-                   self.our_penalty_area,
-                   self.opp_penalty_area,
-                   self.our_disconnected_player,
-                   self.opp_disconnected_player ]
+        result = [self.date,
+                  self.team_point[0],
+                  self.team_point[1],
+                  self.team_point[2],
+                  self.team_point[3],
+                  self.team_point[4],
+                  self.team_point[5],
+                  self.final_result,
+                  self.our_dominate_time,
+                  self.opp_dominate_time,
+                  self.our_possession,
+                  self.opp_possession,
+                  self.our_yellow,
+                  self.opp_yellow,
+                  # sum( self.our_kick ),
+                  # self.our_kick[0],
+                  # self.our_kick[1],
+                  # self.our_kick[2],
+                  # self.our_kick[3],
+                  # sum( self.opp_kick ),
+                  # self.opp_kick[0],
+                  # self.opp_kick[1],
+                  # self.opp_kick[2],
+                  # self.opp_kick[3],
+                  sum(self.our_pass),
+                  self.our_pass[0],
+                  self.our_pass[1],
+                  self.our_pass[2],
+                  self.our_pass[3],
+                  sum(self.opp_pass),
+                  self.opp_pass[0],
+                  self.opp_pass[1],
+                  self.opp_pass[2],
+                  self.opp_pass[3],
+                  self.our_through_pass,
+                  self.opp_through_pass,
+                  self.our_tackle,
+                  self.all_our_tackle - self.our_tackle,
+                  self.opp_tackle,
+                  self.all_opp_tackle - self.opp_tackle,
+                  self.our_shoot,
+                  self.opp_shoot,
+                  self.our_point,
+                  self.opp_point,
+                  self.our_dribble,
+                  self.opp_dribble,
+                  self.our_penalty_area,
+                  self.opp_penalty_area,
+                  self.our_disconnected_player,
+                  self.opp_disconnected_player]
 
-        csvWriter.writerow( result )
+        csvWriter.writerow(result)
         f.close()
 
 
@@ -252,8 +254,8 @@ class Team:
     def __init__(self, teamname):
         self.name = teamname
         self.player = []
-        for i in range( 11 ):
-            self.player.append( Player() )
+        for i in range(11):
+            self.player.append(Player())
         self.offsideLineX = 0.0
 
 
@@ -270,21 +272,25 @@ class Player:
         self.stamina_capacity = 130600
         self.action = ""
 
+
 class Position:
     def __init__(self):
         self.x = 0.0
         self.y = 0.0
+
 
 class Ball:
     def __init__(self):
         self.pos = Position()
         self.vel = Position()
 
+
 class Referee:
     def __init__(self):
         self.playmode = ""
         self.say = []
         self.said = False
+
 
 class ServerParam:
     def __init__(self):
@@ -297,8 +303,8 @@ class ServerParam:
         self.penalty_area_y = 20.00
         self.ball_speed_decay = 0.94
         self.hetero = []
-        for i in range( 18 ):
-            self.hetero.append( HeteroParam() )
+        for i in range(18):
+            self.hetero.append(HeteroParam())
 
 
 class HeteroParam:
@@ -322,8 +328,8 @@ class HeteroParam:
 class WorldModel:
     def __init__(self, team_l, team_r):
         self.ball = Ball()
-        self.l = Team( team_l )
-        self.r = Team( team_r )
+        self.l = Team(team_l)
+        self.r = Team(team_r)
         self.referee = Referee()
         self.dominate_side = "none"
         self.last_kicker_unum = -1

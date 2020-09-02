@@ -1,7 +1,6 @@
-from . import lib_log_analyzer as lib
+#!/usr/bin/env python
 
 import argparse
-import os
 
 def parser():
     usage = 'python main.py <file name> [--side <l or r>] [--team <teamname>] [--help]'
@@ -35,7 +34,7 @@ def parser():
                          help="start cycle")
     parser.add_argument( "--end-cycle", \
                          type=int, \
-                         default=6000, \
+                         default=8000, \
                          help="end cycle")
 
     #print (parser.parse_args())
