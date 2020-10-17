@@ -268,7 +268,7 @@ def getSequence( wm, sp, cycle, feat, until_penalty_area=True, kick_dist_thr=3.0
     return 0
 
 
-def considerSameTimingKick(wm, cycle, feat, kick_dist_thr=3.0):
+def considerSimultaneousKick(wm, cycle, feat, kick_dist_thr=3.0):
     if (len(feat.kick_path_x) > 0):
         feat.kick_cycle.append(cycle)
         feat.kick_path_x.append(wm[cycle].ball.pos.x)

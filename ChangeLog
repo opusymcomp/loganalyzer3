@@ -1,3 +1,10 @@
+2020-10-17  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * calculation/calculate.py:
+    - disconnected_playerの検出バグを修正
+    * calculation/kick_sequence.py:
+    - simultaneous kickに命名を変更
+
 2020-07-22  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
 
     * calculation/calculate.py:

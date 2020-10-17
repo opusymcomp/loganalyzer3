@@ -95,9 +95,9 @@ def analyzeLog(args, wm, sp, feat):
 
         kick_count = gk.isKick(wm,  relative_cycle)
 
-        # same timing kick
+        # simultaneous kick
         if kick_count > 1:
-            ks.considerSameTimingKick(wm, relative_cycle, feat, kick_dist_thr=0.0)
+            ks.considerSimultaneousKick(wm, relative_cycle, feat, kick_dist_thr=0.0)
             # finish kick sequence by opp intercept
             if not __debug__ and not wm[relative_cycle].referee.said:
                 if wm[relative_cycle].dominate_side == "l":
@@ -111,7 +111,6 @@ def analyzeLog(args, wm, sp, feat):
                     print("team r Penalty", cycle + 1)
                 elif wm[relative_cycle - 1].dominate_side == "r":
                     print("team l Penalty", cycle + 1)
-
         elif (kick_count == 1
               and not wm[relative_cycle].referee.said):
             if shoot.isOurShoot(wm[relative_cycle + 1], sp, cycle, feat.target_team):
@@ -125,25 +124,26 @@ def analyzeLog(args, wm, sp, feat):
             feat.our_penalty_area += ks.getSequence(wm, sp, relative_cycle, feat,
                                                     until_penalty_area=True, kick_dist_thr=0.0)
 
+        # find disconnected player
+        l_disconnected_player = 0
+        r_disconnected_player = 0
+        for unum in range(11):
+            if state.isDead(relative_cycle, unum, 'l', wm):
+                l_disconnected_player += 1
+            elif state.isDead(relative_cycle, unum, 'r', wm):
+                r_disconnected_player += 1
+        if feat.target_team == 'l':
+            feat.our_disconnected_player = max(l_disconnected_player, feat.our_disconnected_player)
+            feat.opp_disconnected_player = max(r_disconnected_player, feat.opp_disconnected_player)
+        elif feat.target_team == 'r':
+            feat.our_disconnected_player = max(r_disconnected_player, feat.our_disconnected_player)
+            feat.opp_disconnected_player = max(l_disconnected_player, feat.opp_disconnected_player)
+
         # output for each cycle
         if args.each_cycle:
             if not args.without_index:
                 feat.outputIndexForIR(args.start_cycle+1, cycle+1)
             feat.outputIntegrateResult(args.start_cycle+1, cycle+1)
-
-    l_disconnected_player = 0
-    r_disconnected_player = 0
-    for unum in range(11):
-        if state.isDead(args.end_cycle, unum, 'l', wm):
-            l_disconnected_player += 1
-        elif state.isDead(args.end_cycle, unum, 'r', wm):
-            r_disconnected_player += 1
-    if feat.target_team == 'l':
-        feat.our_disconnected_player = l_disconnected_player
-        feat.opp_disconnected_player = r_disconnected_player
-    elif feat.target_team == 'r':
-        feat.our_disconnected_player = r_disconnected_player
-        feat.opp_disconnected_player = l_disconnected_player
 
     feat.outputResult( feat.team_point[0] )
     # ks.saveKickSequence( feat, outputKickedCycle=True )
