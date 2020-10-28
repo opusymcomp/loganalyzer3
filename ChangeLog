@@ -1,3 +1,8 @@
+2020-10-28  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * extraction/rcg_reader.py:
+    - 初期位置状態検出部分に例外処理を追加
+
 2020-10-17  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
 
     * calculation/calculate.py:
