@@ -17,10 +17,16 @@ def getInitialPosition( line, wm ):
 
         if ( wm.l.name == move_teamname ):
             wm.l.player[ move_player - 1 ].pos.x = float( line.split()[seq+1] )
-            wm.l.player[ move_player - 1 ].pos.y = float( line.split()[seq+2].split(")(")[0] )
+            try:
+                wm.l.player[ move_player - 1 ].pos.y = float( line.split()[seq+2].split(")(")[0] )
+            except ValueError:
+                wm.l.player[ move_player - 1 ].pos.y = float( line.split()[seq+2].replace(")","") )
         elif ( wm.r.name == move_teamname ):
             wm.r.player[ move_player - 1 ].pos.x = float( line.split()[seq+1] )
-            wm.r.player[ move_player - 1 ].pos.y = float( line.split()[seq+2].split(")(")[0] )
+            try:
+                wm.r.player[ move_player - 1 ].pos.y = float( line.split()[seq+2].split(")(")[0] )
+            except ValueError:
+                wm.r.player[ move_player - 1 ].pos.y = float( line.split()[seq+2].replace(")","") )
 
 
 def getAction( line, wm ):
