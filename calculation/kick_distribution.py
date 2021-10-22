@@ -1,22 +1,27 @@
+#!/usr/bin/env python
+# cython: language_level=3
 # -*- coding: utf-8 -*-
-#! /usr/bin/env python
+
+import cython
 
 from lib import lib_log_analyzer as lib
+from lib import la_class
 
-def saveKickDistribution( feat, degree_range=90 ):
 
-    with open( 'kick_distribution.csv', 'a' ) as f:
+def saveKickDistribution( feat: la_class.Feature, path: str, degree_range: cython.int = 90 ) -> None:
 
-        file_pointers = []
+    with open( path+'kick_distribution.csv', 'a' ) as f:
+
+        file_pointers: list = []
         for i in range(-180, 180, degree_range):
             fp = open("kick_distribution_{}_{}.csv".format(i, i+degree_range), "a")
             file_pointers.append(fp)
         f_success = open("kick_distribution_success.csv", "a")
 
         for i in range( len( feat.kick_sequence ) - 1 ):
-            degree = lib.changeRadianToDegree(lib.calcRadianC(feat.kick_sequence[i][1], feat.kick_sequence[i][2],
-                                                              feat.kick_sequence[i + 1][1],
-                                                              feat.kick_sequence[i + 1][2]))
+            degree: cython.int = lib.changeRadianToDegree(lib.calcRadianC(feat.kick_sequence[i][1], feat.kick_sequence[i][2],
+                                                                          feat.kick_sequence[i + 1][1],
+                                                                          feat.kick_sequence[i + 1][2]))
 
             # if not terminal condition
             if ( feat.kick_sequence[i][4] != -1 \
@@ -55,7 +60,8 @@ def saveKickDistribution( feat, degree_range=90 ):
             fp.close()
         f_success.close()
 
-def printKickDistribution( sp, feat ):
+
+def printKickDistribution( sp: la_class.ServerParam, feat: la_class.Feature, path: str ) -> None:
 
     import matplotlib
     #matplotlib.use('Agg')
@@ -65,8 +71,8 @@ def printKickDistribution( sp, feat ):
     from matplotlib import pyplot as plt
     import matplotlib.font_manager as fm
 
-    xlim = sp.pitch_length / 2 + 5.0
-    ylim = sp.pitch_width / 2 + 5.0
+    xlim: cython.double = sp.pitch_length / 2 + 5.0
+    ylim: cython.double = sp.pitch_width / 2 + 5.0
     fm._rebuild()
     #plt.rc('font', family='Times New Roman')
     #plt.rcParams['font.family'] = 'Times New Roman'
@@ -120,8 +126,8 @@ def printKickDistribution( sp, feat ):
                                             feat.kick_sequence[i+1][2] ) ],
                        "red" )
 
-    filename = feat.team_point[0] + "-kick_distribution"
-    extension = [".eps", ".pdf", ".png", ".svg"]
+    filename: cython.str = path + feat.team_point[0] + "-kick_distribution"
+    extension: list = [".eps", ".pdf", ".png", ".svg"]
     for e in extension:
         plt.savefig(filename+e, dpi=300, bbox_inches="tight", transparent=True)
     plt.show()

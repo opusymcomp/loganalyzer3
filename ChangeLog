@@ -1,7 +1,46 @@
-2020-10-28  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+2021-10-22  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+    
+    * main.py:
+    - --output-dirオプション時にディレクトリを作成するように設定
+    
+    * requirements.txt:
+    - pip install -r requirements.txt で環境をインストールできるように設定
 
+2021-08-02  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * main.py:
+    - エラー検出時止まらないように設定
+
+2020-12-11  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * calculation/*:
+    * extraction/*:
+    * lib/*:
+    - cython化動作の修正，高速化に対応
+    - pydファイルの削除
+
+2020-12-11  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
+
+    * calculation/calculate.py:
+    * calculation/kick_distribution.py:
+    * calculation/kick_sequence.py:
+    * extraction/extract.pyd:
+    * extraction/extract.py:
+    * extraction/filename_split.py:
     * extraction/rcg_reader.py:
-    - 初期位置状態検出部分に例外処理を追加
+    * lib/la_class.py:
+    * lib/la_class.pyd:
+    * lib/option.py:
+    - --outputオプションの追加．出力ファイルのディレクトリを指定できるように変更
+
+    * loganalyzer3:
+    * loop.sh:
+    * main.py:
+    - --without-indexオプションの削除
+    - loop.shを使わない実装に変更
+
+    * clean.sh:
+    - cythonファイル削除用スクリプトの追加
 
 2020-10-17  Takuya Fukushima  <takuya.fukushima@kis.osakafu-u.ac.jp>
 

@@ -1,15 +1,19 @@
-from extraction import get_tackle
-from calculation import shoot
+#!/usr/bin/env python
+# cython: language_level=3
+
+import cython
+
+from lib import la_class
 from lib import lib_log_analyzer as lib
 
 
-def countKick( wm, cycle, feat ):
+def countKick( wm: list, cycle: cython.int, feat: la_class.Feature ) -> str:
 
     # same timing kick is already considered
     if ( feat.target_team == "l" ):
         if ( wm[cycle+1].dominate_side == "l" ):
 
-            direction = getPassRoute( wm, cycle )
+            direction: cython.str = getPassRoute( wm, cycle )
 
             if ( direction == "left" ):
                 feat.our_kick[0] += 1
@@ -22,7 +26,7 @@ def countKick( wm, cycle, feat ):
 
         if ( wm[cycle+1].dominate_side == "r" ):
 
-            direction = getPassRoute( wm, cycle )
+            direction: cython.str = getPassRoute( wm, cycle )
 
             if ( direction == "left" ):
                 feat.opp_kick[0] += 1
@@ -36,7 +40,7 @@ def countKick( wm, cycle, feat ):
     elif ( feat.target_team == "r" ):
         if ( wm[cycle+1].dominate_side == "l" ):
 
-            direction = getPassRoute( wm, cycle )
+            direction: cython.str = getPassRoute( wm, cycle )
 
             if ( direction == "left" ):
                 feat.opp_kick[0] += 1
@@ -49,7 +53,7 @@ def countKick( wm, cycle, feat ):
 
         if ( wm[cycle+1].dominate_side == "r" ):
 
-            direction = getPassRoute( wm, cycle )
+            direction: cython.str = getPassRoute( wm, cycle )
 
             if ( direction == "left" ):
                 feat.our_kick[0] += 1
@@ -63,7 +67,7 @@ def countKick( wm, cycle, feat ):
     return direction
 
 
-def countPass( wm, cycle, direction, feat ):
+def countPass( wm: list, cycle: cython.int, direction: str, feat: la_class.Feature ) -> None:
 
     if ( wm[cycle+1].dominate_side == wm[cycle].dominate_side \
          and wm[cycle+1].last_kicker_unum != wm[cycle].last_kicker_unum ):
@@ -100,7 +104,6 @@ def countPass( wm, cycle, direction, feat ):
                 feat.our_pass[3] += 1
 
         else:
-
             if ( direction == "left" ):
                 if ( not __debug__ ):
                     print ( "opp", wm[cycle].last_kicker_unum+1, \
@@ -131,13 +134,12 @@ def countPass( wm, cycle, direction, feat ):
                 feat.opp_pass[3] += 1
 
 
-def getPassRoute( wm, cycle ):
+def getPassRoute( wm: list, cycle:cython.int ) -> str:
 
     # check pass route. return -> left, right, front, back
-    last_kicked_cycle = wm[cycle].last_kicked_cycle
-    radian = lib.calcRadian( wm[ last_kicked_cycle ].ball.pos, \
-                             wm[ cycle ].ball.pos )
-    degree = lib.changeRadianToDegree( radian )
+    last_kicked_cycle: cython.int = wm[cycle].last_kicked_cycle
+    radian: cython.double = lib.calcRadian( wm[ last_kicked_cycle ].ball.pos, wm[ cycle ].ball.pos )
+    degree: cython.double = lib.changeRadianToDegree( radian )
 
     if( wm[cycle+1].dominate_side == "l" ):
 

@@ -1,22 +1,21 @@
+#!/usr/bin/env python
+# cython: language_level=3
+
+import cython
+
 # This file is module of filename
 # get an argument which is the name of target team
 # then devide filename into target team and opponent team
 # there are 4 return value [the name of target team , thename of opponent team , target team's score , opponent team's score ]
 
 
-import glob  # need foor getting filename
-import gzip
-
-from lib import lib_log_analyzer as lib
-
-
-def splitFileName(logname, l_teamname, r_teamname, team):
-    left = str(logname.split("-vs-")[0].split("-", 1)[1].rsplit("_", 1)[0])
-    right = str(logname.split("-vs-")[1].rsplit("_", 1)[0])
-    l_score = logname.split("-vs-")[0].rsplit("_", 1)[1]
-    r_score = logname.split("-vs-")[1].rsplit("_", 1)[1]
-    l_ps_score = 0
-    r_ps_score = 0
+def splitFileName(logname: str, l_teamname: str, r_teamname: str, team: str) -> list:
+    left: cython.str = str(logname.split("-vs-")[0].split("-", 1)[1].rsplit("_", 1)[0])
+    right: cython.str = str(logname.split("-vs-")[1].rsplit("_", 1)[0])
+    l_score: cython.str = logname.split("-vs-")[0].rsplit("_", 1)[1]
+    r_score: cython.str = logname.split("-vs-")[1].rsplit("_", 1)[1]
+    l_ps_score: cython.str = "0"
+    r_ps_score: cython.str = "0"
 
     if left != l_teamname and right != r_teamname:
         left = logname.split("-vs-")[0].split("-", 1)[1].rsplit("_", 2)[0]
@@ -36,4 +35,4 @@ def splitFileName(logname, l_teamname, r_teamname, team):
 
     else:
         print("emergency error : file name doesn't correspond to rcg file")
-        return ["0", "0", 0, 0, 0, 0]
+        return ["none", "none", 0, 0, 0, 0]

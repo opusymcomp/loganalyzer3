@@ -1,36 +1,37 @@
+#!/usr/bin/env python
+# cython: language_level=3
 # -*- coding: utf-8 -*-
-# ! /usr/bin/env python
 
-from lib import lib_log_analyzer as lib
+import cython
 import itertools
 
-def appendSequence( feat, color, kick_dist_thr ):
-    # feat.all_kick_path_x.append( feat.kick_path_x )
-    # feat.all_kick_path_y.append( feat.kick_path_y )
+from lib import lib_log_analyzer as lib
+from lib import la_class
 
-    INVALID_VALUE = -10000.0
+def appendSequence( feat: la_class.Feature, color: str, kick_dist_thr: cython.double ) -> None:
+    INVALID_VALUE: cython.double = -10000.0
 
-    START_SEQUENCE = 0
-    BETWEEN_SEQUENCE = 1
-    END_SEQUENCE = -1
+    START_SEQUENCE: cython.int = 0
+    BETWEEN_SEQUENCE: cython.int = 1
+    END_SEQUENCE: cython.int = -1
 
-    POSITIVE_LABEL = 1
-    NEGATIVE_LABEL = 0
+    POSITIVE_LABEL: cython.int = 1
+    NEGATIVE_LABEL: cython.int = 0
 
     # ignore the kick_paths whose distance is shorter than kick_dist_thr
-    tmp_kick_path_x = []
-    tmp_kick_path_y = []
+    tmp_kick_path_x: list = []
+    tmp_kick_path_y: list = []
 
     # kick_sequence: ( [ kick_cycle, x, y, teacher signal, sequence flag, kicker_unum, receiver_unum, ...,
     # mate1_x, mate1_y, mate1_bodyangle, mate1_neckangle, ... , opp1_x, opp1_y, opp1_bodyangle, opp1_neckangle, ... ] )
     for i in range(len(feat.kick_path_x)):
-        sequence_flag = END_SEQUENCE if i == len(feat.kick_path_x) - 1 \
+        sequence_flag: cython.int = END_SEQUENCE if i == len(feat.kick_path_x) - 1 \
             else START_SEQUENCE if i == 0 \
             else BETWEEN_SEQUENCE
-        label = POSITIVE_LABEL if color == "ro-" \
+        label: cython.int = POSITIVE_LABEL if color == "ro-" \
             else NEGATIVE_LABEL if color == "bo--" \
-            else None
-        if label is None:
+            else -1
+        if label == -1:
             raise SyntaxError
         if sequence_flag == BETWEEN_SEQUENCE:
             if lib.calcDistC(feat.kick_path_x[i], feat.kick_path_y[i], feat.kick_path_x[i-1], feat.kick_path_y[i-1]) < kick_dist_thr:
@@ -39,10 +40,10 @@ def appendSequence( feat, color, kick_dist_thr ):
         tmp_kick_path_x.append(feat.kick_path_x[i])
         tmp_kick_path_y.append(feat.kick_path_y[i])
 
-        tmp_kick_sequence = [feat.kick_cycle[i],
-                             feat.kick_path_x[i], feat.kick_path_y[i],
-                             label, sequence_flag,
-                             feat.kicker[i], feat.receiver[i]]
+        tmp_kick_sequence: list = [feat.kick_cycle[i],
+                                  feat.kick_path_x[i], feat.kick_path_y[i],
+                                  label, sequence_flag,
+                                  feat.kicker[i], feat.receiver[i]]
 
         if sequence_flag == END_SEQUENCE:
             # for teammate
@@ -72,7 +73,7 @@ def appendSequence( feat, color, kick_dist_thr ):
     # feat.color4plt_ks.append('ro-')
 
 
-def printSequence(sp, feat):
+def printSequence(sp: la_class.ServerParam, feat: la_class.Feature, path: str) -> None:
     import matplotlib
     # smatplotlib.use('Agg')
     from matplotlib import pyplot as plt
@@ -115,20 +116,19 @@ def printSequence(sp, feat):
     for x, y, color in zip(feat.all_kick_path_x, feat.all_kick_path_y, feat.color4plt_ks):
         plt.plot(x, y, color)
 
-    filename = feat.team_point[0] + "-kick_sequence"
+    filename = path + feat.team_point[0] + "-kick_sequence"
     extension = [".eps", ".pdf", ".png", ".svg"]
     for e in extension:
         plt.savefig(filename + e, dpi=300, bbox_inches="tight", transparent=True)
     plt.show()
 
 
-def finishSequence( feat, color, kick_dist_thr ):
-
+def finishSequence( feat: la_class.Feature, color: str, kick_dist_thr: cython.double ) -> None:
     appendSequence( feat, color, kick_dist_thr=kick_dist_thr )
     clearList( feat )
 
 
-def clearList(feat):
+def clearList(feat: la_class.Feature) -> None:
     feat.kick_cycle = []
     feat.kick_path_x = []
     feat.kick_path_y = []
@@ -138,21 +138,21 @@ def clearList(feat):
     feat.opponent_from_ball = []
 
 
-def getSequence( wm, sp, cycle, feat, until_penalty_area=True, kick_dist_thr=3.0 ):
-    last_kick_side = wm[cycle].dominate_side
-    last_kick_cycle = wm[cycle].last_kicked_cycle - 1
+def getSequence( wm: list, sp: la_class.ServerParam, cycle: cython.int, feat: la_class.Feature, until_penalty_area: cython.bint = True, kick_dist_thr: cython.double = 3.0 ) -> cython.int:
+    last_kick_side: cython.str = wm[cycle].dominate_side
+    last_kick_cycle: cython.int = wm[cycle].last_kicked_cycle - 1
 
-    kick_side = wm[cycle + 1].dominate_side
-    kick_cycle = cycle
+    kick_side: cython.str = wm[cycle + 1].dominate_side
+    kick_cycle: cython.int = cycle
 
-    NO_KICK = -1
-    NO_KICKER = 0
-    NO_RECEIVER = 0
+    NO_KICK: cython.int = -1
+    NO_KICKER: cython.int = 0
+    NO_RECEIVER: cython.int = 0
 
     if (kick_side == feat.target_team):
 
-        kicked_from = wm[cycle].last_kicker_unum + 1
-        kicked_to = wm[cycle + 1].last_kicker_unum + 1
+        kicked_from: cython.int = wm[cycle].last_kicker_unum + 1
+        kicked_to: cython.int = wm[cycle + 1].last_kicker_unum + 1
 
         # Exit situations
         for i in range(last_kick_cycle, kick_cycle):
@@ -215,8 +215,8 @@ def getSequence( wm, sp, cycle, feat, until_penalty_area=True, kick_dist_thr=3.0
     # Exit situations
     elif kick_side != feat.target_team:
 
-        kicked_from = wm[cycle].last_kicker_unum + 1
-        kicked_to = 0
+        kicked_from: cython.int = wm[cycle].last_kicker_unum + 1
+        kicked_to: cython.int = 0
 
         for i in range(last_kick_cycle, kick_cycle):
 
@@ -268,7 +268,7 @@ def getSequence( wm, sp, cycle, feat, until_penalty_area=True, kick_dist_thr=3.0
     return 0
 
 
-def considerSimultaneousKick(wm, cycle, feat, kick_dist_thr=3.0):
+def considerSimultaneousKick(wm: list, cycle: cython.int, feat: la_class.Feature, kick_dist_thr: cython.double = 3.0) -> None:
     if (len(feat.kick_path_x) > 0):
         feat.kick_cycle.append(cycle)
         feat.kick_path_x.append(wm[cycle].ball.pos.x)
@@ -278,11 +278,11 @@ def considerSimultaneousKick(wm, cycle, feat, kick_dist_thr=3.0):
         finishSequence(feat, "bo--", kick_dist_thr=kick_dist_thr)
 
 
-def saveKickSequence(feat, outputKickedCycle=False):
+def saveKickSequence(feat: la_class.Feature, path: str, outputKickedCycle: cython.bint = False) -> None:
     # kick_sequence data
     # named 'nn_kick_data.csv' before
 
-    with open('kick_sequence.csv', 'a') as f:
+    with open(path+'kick_sequence.csv', 'a') as f:
         for i in range(len(feat.kick_sequence)):
             if outputKickedCycle:
                 f.write(str(feat.kick_sequence[i][0]) + ",")

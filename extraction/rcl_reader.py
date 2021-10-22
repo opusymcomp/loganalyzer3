@@ -1,15 +1,20 @@
-from lib import lib_log_analyzer as lib
+#!/usr/bin/env python
+# cython: language_level=3
+
+import cython
+
+from lib import la_class
 
 
-def getInitialPosition( line, wm ):
+def getInitialPosition( line: str, wm: la_class.WorldModel ) -> None:
 
     if ( line.split()[0].split(",")[0] != "0" ):
         return
 
     if ( "(move" in line ):
-        move_teamname = line.split()[2].rsplit( "_", 1 )[0]
-        move_cycle = int( line.split()[0].split( "," )[0] )
-        move_player = int( line.split()[2].rsplit( "_", 1 )[1].strip( ":" ) )
+        move_teamname: cython.str = line.split()[2].rsplit( "_", 1 )[0]
+        # move_cycle: cython.int = int( line.split()[0].split( "," )[0] )
+        move_player: cython.int = int( line.split()[2].rsplit( "_", 1 )[1].strip( ":" ) )
 
         for i in range( len( line.split() ) ):
             if ( "move" in line.split()[i] ):
@@ -29,10 +34,10 @@ def getInitialPosition( line, wm ):
                 wm.r.player[ move_player - 1 ].pos.y = float( line.split()[seq+2].replace(")","") )
 
 
-def getAction( line, wm ):
+def getAction( line: str, wm: la_class.WorldModel ) -> None:
 
-    teamname = line.split()[2].rsplit( "_", 1 )[0]
-    unum = int( line.split()[2].rsplit( "_", 1 )[1].strip( ":" ) )
+    teamname: cython.str = line.split()[2].rsplit( "_", 1 )[0]
+    unum: cython.int = int( line.split()[2].rsplit( "_", 1 )[1].strip( ":" ) )
 
     if ( teamname == wm.l.name ):
         wm.l.player[unum - 1].action = line.split(": ")[1].strip( "\n" )

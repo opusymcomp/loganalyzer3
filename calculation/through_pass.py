@@ -1,8 +1,13 @@
 #!/usr/bin/env python
+# cython: language_level=3
+# -*- coding: utf-8 -*
 
-def isThroughPass( wm, cycle ):
+import cython
 
-    last_kicked_cycle = wm[cycle].last_kicked_cycle
+from lib import la_class
+
+def isThroughPass( wm: list, cycle: cython.int ) -> cython.bint:
+    last_kicked_cycle: cython.int = wm[cycle].last_kicked_cycle
 
     if ( wm[cycle+1].dominate_side == wm[cycle].dominate_side \
          and wm[cycle+1].last_kicker_unum != wm[cycle].last_kicker_unum ):
@@ -24,9 +29,7 @@ def isThroughPass( wm, cycle ):
     return False
 
 
-
-
-def countThroughPass( wm, cycle, feat ):
+def countThroughPass( wm: list, cycle: cython.int, feat: la_class.Feature ) -> None:
 
     if ( isThroughPass( wm, cycle ) ):
         if ( not __debug__ ):

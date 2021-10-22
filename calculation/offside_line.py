@@ -1,9 +1,15 @@
+#!/usr/bin/env python
+# cython: language_level=3
+
+import cython
+import argparse
+
 from lib import state
 
-def calcOffsideLine( args, wm ):
+def calcOffsideLine( args: argparse, wm: list ) -> None:
 
-    off_l = 0
-    off_r = 0
+    off_l: cython.double = 0.0
+    off_r: cython.double = 0.0
 
     for cycle in range( args.start_cycle, args.end_cycle+1 ):
         for unum in range( 11 ):
@@ -20,5 +26,5 @@ def calcOffsideLine( args, wm ):
         wm[cycle - args.start_cycle].l.offsideLineX = off_l
         wm[cycle - args.start_cycle].r.offsideLineX = off_r
 
-        off_l = 0
-        off_r = 0
+        off_l = 0.0
+        off_r = 0.0

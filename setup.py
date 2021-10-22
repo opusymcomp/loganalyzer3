@@ -11,9 +11,11 @@ compile_list = [
     ["la_class", "lib"],
     ["lib_log_analyzer", "lib"],
     ["option", "lib"],
+    ["state", "lib"],
     ["filename_split", "extraction"],
     ["get_tackle", "extraction"],
     ["get_kick", "extraction"],
+    ["get_dash", "extraction"],
     ["rcg_reader", "extraction"],
     ["rcl_reader", "extraction"],
     ["hetero", "extraction"],
@@ -36,7 +38,6 @@ for l_name, place in compile_list:
     ext.append(Extension(l_name, [place+"/"+l_name+".py"], include_dirs=["."]))
 setup(name="loganalyzer3", ext_modules=cythonize(ext))
 
-print("move libraries (some errors would be caused for Windows)")
 # mv libraries
 for l_name, place in compile_list:
     pathname = glob.glob("./"+l_name+".cpython-*-linux-gnu.so")[0]

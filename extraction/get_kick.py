@@ -1,9 +1,12 @@
 #!/usr/bin/env python
+# cython: language_level=3
+
+import cython
 
 from extraction import get_tackle as gt
+from lib import la_class
 
-
-def checkKick( wm, unum, side ):
+def checkKick( wm: la_class.WorldModel, unum: cython.int, side: str ) -> cython.bint:
 
     if ( side == "l" ):
         if ( int( wm.l.player[unum].state, 16 ) & int( 0x00000004 ) == 4 ):
@@ -20,11 +23,11 @@ def checkKick( wm, unum, side ):
             return True
 
 
-def isKick( wm, cycle ):
+def isKick( wm: list, cycle: cython.int ) -> cython.int:
 
-    num_kick = 0
-    kick_side_l = False
-    kick_side_r = False
+    num_kick: cython.int = 0
+    kick_side_l: cython.bint = False
+    kick_side_r: cython.bint = False
 
     for unum in range( 11 ):
 

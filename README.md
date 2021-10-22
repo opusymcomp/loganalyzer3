@@ -41,7 +41,7 @@ Log analysis tool for RoboCup Soccer Simulation 2D
 - Number of our dribbles
 - Number of opp dribbles
 - Number of entering into ball opp penalty area
-- Number of entering into ball our penalty area
+- Number of entering into ball our penalty area (currently not worked, always returns -1)
 - Number of our disconnected players
 - Number of opp disconnected players
 
@@ -56,11 +56,11 @@ if you add `export PATH="/path/to/loganalyzer3:$PATH"` at the bottom of the "~/.
 - matplotlib
 	- If you want to plot "Kick distribution" or "Kick sequence", latex environment is required.
 	- `sudo apt install texlive texlive-latex-extra texlive-fonts-recommended dvipng msttcorefonts`
-- gzip
-- ...
-- cython (if you comlipe it)
+- cython (if you compile it)
 
-`pip install matplotlib cython gzip `
+you can get all required libraries by the following command.
+
+`pip install -r requirements.txt`
 
 ### Compile cython
 
@@ -69,6 +69,10 @@ you can compile cython files (work for only Ubuntu OS)
 `/path/to/loganalyzer3/build.sh`
 
 you can also use this analyzer without compilation
+
+### Clean cython files
+
+`/path/to/loganalyzer3/clean.sh`
 
 ### Options
 
@@ -80,21 +84,15 @@ you can also use this analyzer without compilation
 
 output to stdout when and who do pass, and output figures of action_sequences and kick_distributions
 
-##### dir mode: 
+##### each cycle mode: 
 
-`dirname -l` 
+`--each-cycle`
 
-analyze all files in the `dirname`
-
-##### file mode: 
-
-`filename --side l`
-
-analyze only `filename`
+output all intermediate results for each cycle
 
 ### Examples of Execution
 
-- `loganalyzer3 /path/to/dir -l`
+- `loganalyzer3 /path/to/dir --side l --output-dir /path/to/savedir/`
 - `loganalyzer3 /path/to/file --side l --debug`
 - `loganalyzer3 /path/to/dir --team HELIOS_base --each-cycle`
 
